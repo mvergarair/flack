@@ -46,3 +46,8 @@ if [[ "$(node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo 0)" -
   N22="$(ls -d "$HOME"/.nvm/versions/node/v22.* 2>/dev/null | sort -V | tail -1)"
   [[ -n "$N22" ]] && export PATH="$N22/bin:$PATH"
 fi
+
+# Turns on every Google Cloud service in scripts/services.txt. The API takes at most 20 per call.
+enable_services() {
+  grep -v '^#' "$ROOT/scripts/services.txt" | grep . | xargs -n 20 "$ROOT/scripts/gcloud.sh" services enable --quiet
+}
