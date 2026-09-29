@@ -126,7 +126,7 @@ jobs:
         run: scripts/fb.sh emulators:exec --project demo-flack --only auth,firestore,database,storage,functions,pubsub "cd e2e && npx playwright test ${{ matrix.projects }}"
       - name: Upload the Playwright report
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-${{ matrix.browsers == 'chromium' && 'chromium' || 'webkit-phones' }}
           path: e2e/artifacts

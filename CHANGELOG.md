@@ -7,6 +7,12 @@ a major version means you need to do something when updating, and the notes say 
 Shell: `cd flack && npm run update`). Your settings are kept. Admins also see an "update
 available" note on the People & invites page when a new release is out.
 
+## 1.4.1 (2026-09-29)
+
+- No more empty strip between the last message and the message box: "… is typing" now appears
+  in that space only while someone types.
+- Dependencies: TypeScript 7, jsdom 30, concurrently 10, and current GitHub Actions.
+
 ## 1.4.0 (2026-09-29)
 
 - **Customize your workspace.** Admins: **People & invites → Customize workspace** to set
