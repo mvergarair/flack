@@ -13,8 +13,14 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 // Name the default RTDB instance explicitly ({project}-default-rtdb): the emulator's injected
 // config otherwise points the Admin SDK at a different namespace than the web client uses.
-const project = process.env.GCLOUD_PROJECT ?? JSON.parse(process.env.FIREBASE_CONFIG ?? '{}').projectId;
-export const rtdb = () => getDatabaseWithUrl(`https://${project}-default-rtdb.firebaseio.com`, app);
+// Outside us-central1 the URL is https://{project}-default-rtdb.{region}.firebasedatabase.app,
+// which Firebase passes in FIREBASE_CONFIG.databaseURL; the emulator gets the us form.
+const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG ?? '{}') as { projectId?: string; databaseURL?: string };
+const project = process.env.GCLOUD_PROJECT ?? firebaseConfig.projectId;
+const databaseUrl =
+  process.env.FUNCTIONS_EMULATOR !== 'true' && firebaseConfig.databaseURL ? firebaseConfig.databaseURL : `https://${project}-default-rtdb.firebaseio.com`;
+export const rtdb = () => getDatabaseWithUrl(databaseUrl, app);
+export const projectId = project as string;
 export const bucket = () => getStorage(app).bucket();
 export const messaging = () => getMessaging(app);
 export const isEmulator = process.env.FUNCTIONS_EMULATOR === 'true';

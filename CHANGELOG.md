@@ -7,6 +7,26 @@ a major version means you need to do something when updating, and the notes say 
 Shell: `cd flack && npm run update`). Your settings are kept. Admins also see an "update
 available" note on the People & invites page when a new release is out.
 
+## 1.5.0 (2026-09-29)
+
+- **Health card for admins.** People & invites shows the last 24 hours: messages, members active
+  this week, database reads and writes against the free quota, function errors and latency, and
+  page-load speed, with a 7-day trend. Data comes from a daily snapshot kept in your project for
+  90 days; production also uses Firebase Performance Monitoring in your own console.
+- **Anonymous usage statistics** ([TELEMETRY.md](TELEMETRY.md)). Once a day, each install sends
+  the maintainers a small anonymous report (version, size ranges, features in use, error counts
+  and speed), never messages, names, emails or anything anyone wrote. **On by default**; turn it
+  off in People & invites, answer `no` at install, or set `FLACK_TELEMETRY=off`. Admins can see
+  exactly what was sent. Aggregates are public at [Flack in numbers](https://flack-telemetry-mv.web.app).
+- **Old data cleans itself up.** Daily snapshots, page-load counters and Activity items are
+  deleted automatically after 90 days (Firestore TTL policies); the Activity page only shows the
+  latest 50 anyway.
+- The installer asks about statistics and records the region.
+- Fix: functions now reach the Realtime Database outside the US (europe-west1, asia-southeast1).
+
+**Updating:** admins see a one-time note about statistics after updating. The update turns on the
+Cloud Monitoring and Error Reporting APIs for the Health card.
+
 ## 1.4.1 (2026-09-29)
 
 - No more empty strip between the last message and the message box: "… is typing" now appears

@@ -24,8 +24,19 @@ function startOgServer() {
   return server;
 }
 
+/** Stands in for the maintainers' telemetry collector (TELEMETRY_URL in .env.demo-flack). */
+function startTelemetrySink() {
+  const server = createServer((req, res) => {
+    req.resume();
+    req.on('end', () => res.writeHead(204).end());
+  });
+  server.listen(5397, '127.0.0.1');
+  return server;
+}
+
 export default async function globalSetup() {
   const og = startOgServer();
+  const sink = startTelemetrySink();
   const browser = await chromium.launch();
   const page = await browser.newPage();
   await page.goto('http://127.0.0.1:5317/login?memcache');
@@ -43,5 +54,5 @@ export default async function globalSetup() {
     if (ok) break;
     await new Promise((r) => setTimeout(r, 500));
   }
-  return () => new Promise<void>((resolve) => og.close(() => resolve()));
+  return () => Promise.all([og, sink].map((s) => new Promise<void>((resolve) => s.close(() => resolve())))).then(() => undefined);
 }

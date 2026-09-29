@@ -25,3 +25,21 @@ document.querySelectorAll('.copy').forEach((button) =>
     }
   }),
 );
+
+// "Flack in numbers": public aggregate statistics; the section stays hidden if they don't load.
+fetch('https://flack-telemetry-mv.web.app/v1/stats')
+  .then((r) => (r.ok ? r.json() : Promise.reject()))
+  .then((s) => {
+    if (!s.installs30d) return;
+    const top = (obj) => Object.entries(obj ?? {}).sort((a, b) => b[1] - a[1])[0]?.[0];
+    const set = (k, v) => {
+      const el = document.querySelector(`[data-stat="${k}"]`);
+      if (el && v != null) el.textContent = v;
+    };
+    set('installs', s.installs30d);
+    set('size', top(s.teamSize));
+    set('push', `${s.features?.push ?? 0}%`);
+    set('version', top(s.versions) && `v${top(s.versions)}`);
+    document.getElementById('numbers').hidden = false;
+  })
+  .catch(() => undefined);

@@ -1,0 +1,81 @@
+.card {
+  margin-top: 16px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.card h2 {
+  margin: 0 0 6px;
+  font-size: 17px;
+}
+.card p {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.row {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.switch input {
+  width: 40px;
+  height: 22px;
+  accent-color: var(--accent);
+}
+.muted {
+  margin-top: 10px !important;
+  color: var(--muted) !important;
+  font-size: 13px !important;
+}
+.link {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.report {
+  margin: 10px 0 0;
+  padding: 12px;
+  max-height: 320px;
+  overflow: auto;
+  border-radius: 8px;
+  background: var(--pre-bg);
+  font-size: 12.5px;
+}
+.error {
+  margin-top: 8px !important;
+  color: var(--danger) !important;
+}
+.notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--accent-soft-border);
+  background: var(--accent-soft);
+  font-size: 14px;
+}
+.noticeActions {
+  display: flex;
+  gap: 6px;
+}

@@ -1,21 +1,22 @@
 {
   "name": "flack",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "private": true,
   "type": "module",
   "workspaces": [
     "web",
     "firebase/functions",
     "firebase/rules-tests",
-    "e2e"
+    "e2e",
+    "telemetry/functions"
   ],
   "scripts": {
     "dev": "concurrently -k -n emu,web \"npm run emulators\" \"npm run dev -w web\"",
     "emulators": "npm run build -w firebase/functions && scripts/fb.sh emulators:start --project demo-flack --only auth,firestore,database,storage,functions,pubsub",
     "seed": "tsx scripts/seed.ts",
     "build": "npm run build -w firebase/functions && npm run build -w web",
-    "typecheck": "npm run typecheck -w web && npm run build -w firebase/functions",
-    "test:unit": "npm test -w web && npm test -w firebase/functions",
+    "typecheck": "npm run typecheck -w web && npm run build -w firebase/functions && npm run build -w telemetry/functions",
+    "test:unit": "npm test -w web && npm test -w firebase/functions && npm test -w telemetry/functions",
     "test:emu": "npm run build -w firebase/functions && scripts/fb.sh emulators:exec --project demo-flack --only auth,firestore,database,storage,functions,pubsub \"npm test -w firebase/rules-tests\"",
     "test": "npm run test:unit && npm run test:emu",
     "e2e": "npm run build -w firebase/functions && scripts/fb.sh emulators:exec --project demo-flack --only auth,firestore,database,storage,functions,pubsub \"npm test -w e2e\"",

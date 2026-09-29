@@ -135,6 +135,18 @@ stay inside them, and a team of 10–100 people normally does.
 - **Budget alert:** the installer creates one (US$5/month by default) that emails the billing account's admins at 50%, 90% and 100%. A budget alert doesn't cap spending; it tells you early.
 - **Built-in cost guards:** 50-message history pages, count queries for unread badges, the offline cache, presence and typing in the Realtime Database, and a word index for search that costs nothing when idle.
 
+## Health and statistics
+
+Admins get a **Health** card (People & invites) with yesterday's messages, active members,
+database reads and writes against the free quota, function errors and latency, and page-load
+speed. It stays in your project.
+
+Flack also sends its maintainers **one anonymous report a day**: version, size ranges, features
+in use, error counts and speed, **never messages, names, emails or anything anyone wrote**. It's
+on by default and easy to turn off (admin switch, `no` at install, or `FLACK_TELEMETRY=off`).
+Every field is listed in [TELEMETRY.md](TELEMETRY.md), and the aggregates are public at
+[Flack in numbers](https://flack-telemetry-mv.web.app).
+
 ## Security
 
 Your data lives only in your Google Cloud project. There's no Flack server and no third party.

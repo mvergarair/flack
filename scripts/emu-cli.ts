@@ -4,6 +4,7 @@
 //   tsx scripts/emu-cli.ts set 'invites/seedInvite' '{"expiresAt":{"__ts":0}}'
 //   tsx scripts/emu-cli.ts get 'users/uMember'
 //   tsx scripts/emu-cli.ts run-scheduled '{"backdate":true}'   (fire the 10-minute sweep now)
+//   tsx scripts/emu-cli.ts run-daily                             (daily stats + anonymous report now)
 import { resetEmulators, seed, adminDb, Timestamp } from './seed-lib.ts';
 
 const [cmd, a1, a2] = process.argv.slice(2);
@@ -54,6 +55,16 @@ switch (cmd) {
       await new Promise((r) => setTimeout(r, 250));
     }
     await new Promise((r) => setTimeout(r, 500)); // pushes/activity written right after
+    break;
+  }
+  case 'run-daily': {
+    // Runs the daily health snapshot + anonymous report (dailystats) now.
+    const res = await fetch('http://127.0.0.1:5301/functions/projects/demo-flack/triggers/us-central1-dailystats-0', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+    });
+    if (!res.ok) throw new Error(`dailystats failed: ${res.status} ${await res.text()}`);
     break;
   }
   default:

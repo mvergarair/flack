@@ -8,6 +8,7 @@ import type { ChannelDoc, MessageDoc, ScheduledDoc, UserDoc } from '../lib/types
 import { notificationBody } from '../notifications/recipients.js';
 import { cannotSend } from './checks.js';
 import { mentionNames, writeMessage } from '../lib/post.js';
+import { expireAt } from '../lib/ttl.js';
 
 /**
  * Every 10 minutes: post due scheduled messages and fire due reminders. The app only offers
@@ -100,6 +101,7 @@ async function postMessage(uid: string, ref: FirebaseFirestore.DocumentReference
       preview: notificationBody(d.text, names, 0, 200),
       error: reason,
       createdAt: FieldValue.serverTimestamp(),
+      expireAt: expireAt(),
     });
     await sendPush(uid, { kind: 'schedule-failed', title: 'Scheduled message not sent', body: reason, path: '/later?tab=scheduled', tag: `sf_${ref.id}` });
   }
@@ -123,6 +125,7 @@ async function fireReminder(uid: string, ref: FirebaseFirestore.DocumentReferenc
       authorId: uid,
       preview: d.text.slice(0, 500),
       createdAt: FieldValue.serverTimestamp(),
+      expireAt: expireAt(),
     });
     return { d, user };
   });

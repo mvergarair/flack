@@ -652,3 +652,23 @@ details p {
     margin-left: auto;
   }
 }
+
+/* Flack in numbers */
+.stats {
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 20px;
+}
+.stats strong {
+  display: block;
+  font: 800 38px 'Bricolage Grotesque', sans-serif;
+  letter-spacing: -0.02em;
+}
+.stats span {
+  color: var(--muted);
+  font-size: 14.5px;
+}
+@media (max-width: 960px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

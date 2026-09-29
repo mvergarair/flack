@@ -19,3 +19,5 @@ firebasehosting.googleapis.com
 billingbudgets.googleapis.com
 cloudresourcemanager.googleapis.com
 secretmanager.googleapis.com
+monitoring.googleapis.com
+clouderrorreporting.googleapis.com
