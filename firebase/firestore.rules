@@ -74,8 +74,22 @@ service cloud.firestore {
 
     // ---------- config ----------
     match /config/{docId} {
-      allow read: if isActive();
-      allow write: if false; // Cloud Functions only
+      // Branding is public (the sign-in page shows it); the rest is for members.
+      allow read: if docId == 'branding' || isActive();
+      // Admins set the branding; everything else is written by Cloud Functions only.
+      allow write: if docId == 'branding' && isAdmin() && validBranding(request.resource.data);
+    }
+    function validBranding(d) {
+      return d.keys().hasOnly(['name', 'tagline', 'logo', 'accent', 'sidebar', 'updatedAt', 'updatedBy'])
+        && d.name is string && d.name.size() <= 40
+        && d.tagline is string && d.tagline.size() <= 140
+        // A small raster data URL (never SVG, which can carry scripts).
+        && (d.logo == null || (d.logo is string && d.logo.size() <= 200000
+          && d.logo.matches('^data:image/(png|webp|jpeg);base64,[A-Za-z0-9+/=]+$')))
+        && (d.accent == null || (d.accent is string && d.accent.matches('^#[0-9a-fA-F]{6}$')))
+        && (d.sidebar == null || (d.sidebar is string && d.sidebar.matches('^#[0-9a-fA-F]{6}$')))
+        && d.updatedAt == request.time
+        && d.updatedBy == request.auth.uid;
     }
 
     // ---------- API tokens: owners see their own (metadata; the doc id is the token's SHA-256) ----------

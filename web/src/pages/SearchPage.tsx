@@ -13,6 +13,7 @@ import { Timestamp } from 'firebase/firestore';
 import { Avatar } from '../components/Avatar';
 import { EmptyState } from '../components/EmptyState';
 import { BackIcon, HashIcon, LockIcon, SearchIcon } from '../components/icons';
+import { useBranding, usePageTitle } from '../data/branding';
 import styles from './SearchPage.module.css';
 
 import { FOCUS_SEARCH_EVENT } from '../data/hotkeys';
@@ -20,6 +21,7 @@ import { FOCUS_SEARCH_EVENT } from '../data/hotkeys';
 type QuickResult = { kind: 'channel' | 'person'; id: string; label: string; sub: string; isPrivate?: boolean };
 
 export function SearchPage() {
+  const { name: workspace } = useBranding();
   const me = useMe();
   const mobile = useIsMobile();
   const { channels, channelsById, users, presence } = useWorkspace();
@@ -39,9 +41,7 @@ export function SearchPage() {
   const [active, setActive] = useState(-1); // highlighted channel/person result
   const input = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    document.title = q ? `“${q}” · Search · Flack` : 'Search · Flack';
-  }, [q]);
+  usePageTitle(q ? `“${q}” · Search` : 'Search');
   // Sync the box from the URL only when the query changed elsewhere (back/forward, a link),
   // never from our own debounced update — that would clobber letters typed meanwhile.
   const ownQ = useRef(q);
@@ -294,7 +294,7 @@ export function SearchPage() {
         )}
         {q && <h2 className={styles.h2}>Messages</h2>}
         {!draft.trim() && !q && (
-          <EmptyState title="Search Flack" body="Find channels, people, and messages or files in conversations you're part of. Press ⌘K anytime." />
+          <EmptyState title={`Search ${workspace}`} body="Find channels, people, and messages or files in conversations you're part of. Press ⌘K anytime." />
         )}
         {q && results?.length === 0 && !busy && <p className={styles.none}>No messages match. Try fewer or different words, or clear the filters.</p>}
         <ul className={styles.list} data-testid="search-results" role="listbox" aria-label="Messages">

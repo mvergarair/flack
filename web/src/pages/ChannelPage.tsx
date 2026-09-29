@@ -16,6 +16,7 @@ import { typingKey, useEnsureTypingKey } from '../data/typing';
 import { ThreadPanel } from '../components/ThreadPanel';
 import { PinnedBar } from '../components/PinnedBar';
 import { Avatar } from '../components/Avatar';
+import { usePageTitle } from '../data/branding';
 import type { Channel } from '../data/types';
 import styles from './ChannelPage.module.css';
 
@@ -27,11 +28,9 @@ export function ChannelPage() {
   const channel = channelsById.get(channelId);
 
   useEffect(() => {
-    if (channel) {
-      rememberChannel(channel.id);
-      document.title = `${channel.type === 'dm' ? '' : '#'}${channelTitle(channel, me.id, users)} · Flack`;
-    }
-  }, [channel, me.id, users]);
+    if (channel) rememberChannel(channel.id);
+  }, [channel]);
+  usePageTitle(channel ? `${channel.type === 'dm' ? '' : '#'}${channelTitle(channel, me.id, users)}` : null);
 
   if (!channel) return <NotFound />;
 

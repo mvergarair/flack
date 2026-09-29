@@ -16,7 +16,9 @@ import { InviteDialog } from '../components/InviteDialog';
 import { CopyButton } from '../components/CopyButton';
 import { Modal } from '../components/Modal';
 import { MobileHeader } from './MobileHome';
-import { PlusIcon } from '../components/icons';
+import { PlusIcon, SettingsIcon } from '../components/icons';
+import { WorkspaceSettings } from '../components/WorkspaceSettings';
+import { usePageTitle } from '../data/branding';
 import styles from './AdminPage.module.css';
 
 type Confirm = { kind: 'deactivate' | 'reactivate'; user: UserProfile } | { kind: 'revoke'; invite: Invite } | null;
@@ -31,9 +33,11 @@ export function AdminPage() {
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState('');
+  const [customizing, setCustomizing] = useState(false);
+
+  usePageTitle('People & invites');
 
   useEffect(() => {
-    document.title = 'People & invites · Flack';
     return onSnapshot(
       query(collection(db, 'invites'), where('status', '==', 'pending'), orderBy('createdAt', 'desc')),
       (snap) => setInvites(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Invite)),
@@ -77,9 +81,14 @@ export function AdminPage() {
                 {[...users.values()].filter((u) => u.status === 'active').length} active · {invites.length} pending invite{invites.length === 1 ? '' : 's'}
               </p>
             </div>
-            <button className="btn btn-primary" onClick={() => setInviting(true)}>
-              <PlusIcon size={16} /> Invite people
-            </button>
+            <span className={styles.headerActions}>
+              <button className="btn" onClick={() => setCustomizing(true)}>
+                <SettingsIcon size={16} /> Customize workspace
+              </button>
+              <button className="btn btn-primary" onClick={() => setInviting(true)}>
+                <PlusIcon size={16} /> Invite people
+              </button>
+            </span>
           </header>
           {update && (
             <div className={styles.update} role="status" data-testid="update-banner">
@@ -233,6 +242,7 @@ export function AdminPage() {
           </p>
         </Modal>
       )}
+      {customizing && <WorkspaceSettings onClose={() => setCustomizing(false)} />}
     </div>
   );
 }

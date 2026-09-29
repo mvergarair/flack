@@ -52,6 +52,9 @@ export const beforecreated = beforeUserCreated(async (event) => {
     }
 
     const defaultIds: string[] = bootstrapped ? (cfg.get('defaultChannelIds') ?? []) : [];
+    // Default channels that were deleted or archived since an admin picked them are skipped
+    // below, so a stale setting can never block sign-ups.
+    const defaults = defaultIds.length ? await Promise.all(defaultIds.map((id) => tx.get(db.doc(`channels/${id}`)))) : [];
     // Reads done; writes below.
     if (!bootstrapped) {
       for (const ch of DEFAULT_CHANNELS) {
@@ -68,8 +71,10 @@ export const beforecreated = beforeUserCreated(async (event) => {
       }
       tx.set(cfgRef, { bootstrapped: true, defaultChannelIds: DEFAULT_CHANNELS.map((c) => c.id), bootstrappedAt: now }, { merge: true });
     } else {
-      for (const id of defaultIds) {
-        tx.update(db.doc(`channels/${id}`), { memberIds: FieldValue.arrayUnion(user.uid) });
+      for (const snap of defaults) {
+        if (snap.exists && snap.get('type') === 'public' && !snap.get('archived')) {
+          tx.update(snap.ref, { memberIds: FieldValue.arrayUnion(user.uid) });
+        }
       }
     }
 

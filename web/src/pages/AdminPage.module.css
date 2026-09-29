@@ -159,3 +159,8 @@
   font-size: 12px;
   text-align: center;
 }
+.headerActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}

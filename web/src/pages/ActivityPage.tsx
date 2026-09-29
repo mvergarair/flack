@@ -15,6 +15,7 @@ import { reminderPresets } from '../lib/schedule';
 import { friendlyError } from '../lib/errors';
 import type { ActivityItem } from '../data/types';
 import { MobileHeader } from './MobileHome';
+import { usePageTitle } from '../data/branding';
 import styles from './ActivityPage.module.css';
 
 export function ActivityPage() {
@@ -31,9 +32,7 @@ export function ActivityPage() {
     await dismissActivity(me.id, a.id);
   };
 
-  useEffect(() => {
-    document.title = 'Activity · Flack';
-  }, []);
+  usePageTitle('Activity');
 
   // Opening the view marks everything as seen (after render, so "new" dots show once).
   useEffect(() => {

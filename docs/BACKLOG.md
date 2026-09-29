@@ -36,6 +36,15 @@ The app is sized for ≤50 people. Two app-wide listeners grow with headcount ×
 - **Real-device push check** (Mac, Android, iPhone home-screen app) — never verified end to
   end; FCM isn't emulated.
 
+## Branded installed app
+
+Admins can set the workspace name, logo and colors (1.4.0), but the **installed** app (home
+screen / dock icon and name) still says Flack: that comes from the web app manifest, which is
+built statically and precached by the service worker. Plan: serve `/manifest.webmanifest` and
+the icons from a function (or Hosting rewrite) that reads `config/branding`, generate 192/512
+and maskable PNGs from the logo when it's saved, and keep the manifest out of the precache so
+changes reach installed apps.
+
 ## One-click updates for installed copies
 
 Today an admin sees "update available" but someone must run `npm run update` from the original

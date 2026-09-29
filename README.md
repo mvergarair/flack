@@ -40,6 +40,7 @@
 - **Notifications:** web push on desktop, Android and iPhone home-screen apps; per-channel levels; Do Not Disturb with schedules.
 - **The small things:** reactions with your own quick picks, pins, mark unread, edit with ↑, typing indicators, online/away/last seen, custom status, profile cards with local time, link previews, file uploads up to 50 MB.
 - **Admin:** invite-only (Google sign-in), invite links, roles, deactivate anyone instantly.
+- **Your brand:** set the workspace name, logo, colors, sign-in message and default channels (Admin → Customize workspace).
 - **HTTP API:** read channels and messages, search, and post messages from scripts, CI and bots with personal API tokens ([docs/API.md](docs/API.md)).
 - **Everywhere:** a single PWA for Mac, Windows, iPhone, Android and the browser, with light and dark themes.
 

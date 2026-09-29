@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation } from 'react-router';
 import { AuthProvider, useAuth } from '../auth/AuthProvider';
+import { BrandingProvider } from '../data/branding';
 import { WorkspaceProvider } from '../data/workspace';
 import { UnreadCountsProvider } from '../data/unreadCounts';
 import { LoginPage } from '../pages/Login';
@@ -69,8 +70,10 @@ const router = createBrowserRouter([
 
 export function App() {
   return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <BrandingProvider>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </BrandingProvider>
   );
 }

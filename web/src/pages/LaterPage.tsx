@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { useMe } from '../auth/AuthProvider';
 import { useWorkspace } from '../data/workspace';
@@ -14,6 +14,7 @@ import { SchedulePicker } from '../components/SchedulePicker';
 import { ClockIcon } from '../components/icons';
 import { MobileHeader } from './MobileHome';
 import { SavedList } from './LaterSaved';
+import { usePageTitle } from '../data/branding';
 import styles from './ActivityPage.module.css';
 import tabStyles from './LaterPage.module.css';
 
@@ -36,9 +37,7 @@ export function LaterPage() {
     scheduled: scheduled.filter((s) => s.kind === 'message').length,
   };
 
-  useEffect(() => {
-    document.title = 'Later · Flack';
-  }, []);
+  usePageTitle('Later');
 
   return (
     <div className={styles.page}>
