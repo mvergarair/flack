@@ -7,6 +7,15 @@ a major version means you need to do something when updating, and the notes say 
 Shell: `cd flack && npm run update`). Your settings are kept. Admins also see an "update
 available" note on the People & invites page when a new release is out.
 
+## 1.3.0 (2026-09-29)
+
+- **API reference on your own domain.** `https://<project>.web.app/api/docs` is an interactive
+  reference: every endpoint with examples, code snippets and a "Test Request" panel (paste a
+  token). The machine-readable spec is at `/api/openapi.json` (OpenAPI 3.1) for Postman,
+  Insomnia or code generators. `/api` and `/api/v1` lead there too.
+- The spec (`firebase/functions/src/api/openapi.yaml`) is checked against the API's routes in
+  tests, so the docs can't drift from the code.
+
 ## 1.2.0 (2026-09-29)
 
 - **HTTP API.** Read channels, messages, threads and people, search, open DMs and post

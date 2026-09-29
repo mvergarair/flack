@@ -41,4 +41,6 @@ and the README has the full picture.
 - **Releases:** bump `version` in the root `package.json` and add a `CHANGELOG.md` entry. New
   Google Cloud APIs go in `scripts/services.txt`, so installed copies turn them on with
   `npm run update`. Changes must work for existing data (or migrate it lazily, like `typingKey`).
+- **API changes** go in `firebase/functions/src/api/` *and* `openapi.yaml` next to it (a test fails
+  if routes and spec disagree); `docs/API.md` is the readable guide.
 - **Node 22+.** If `vitest` fails with a `styleText` import error, your shell picked an older Node.

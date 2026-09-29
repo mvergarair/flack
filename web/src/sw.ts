@@ -17,7 +17,7 @@ precacheAndRoute(self.__WB_MANIFEST);
 // App shell: every navigation serves the cached index.html so the PWA opens offline.
 // (/__/auth/* is Firebase Auth's own handler and must reach the network.)
 try {
-  registerRoute(new NavigationRoute(createHandlerBoundToURL('/index.html'), { denylist: [/^\/__\//] }));
+  registerRoute(new NavigationRoute(createHandlerBoundToURL('/index.html'), { denylist: [/^\/__\//, /^\/api(\/|$)/] }));
 } catch {
   // index.html is not precached in dev.
 }

@@ -28,24 +28,26 @@ export type RouteName =
 
 interface Route {
   method: 'GET' | 'POST';
+  /** The path as written in openapi.yaml (relative to /api/v1). */
+  spec: string;
   pattern: RegExp;
   name: RouteName;
   scope: Scope;
 }
 
 const ID = '([A-Za-z0-9_-]{1,128})';
-const ROUTES: Route[] = [
-  { method: 'GET', pattern: /^\/v1\/me$/, name: 'me', scope: 'read' },
-  { method: 'GET', pattern: /^\/v1\/users$/, name: 'listUsers', scope: 'read' },
-  { method: 'GET', pattern: new RegExp(`^/v1/users/${ID}$`), name: 'getUser', scope: 'read' },
-  { method: 'GET', pattern: /^\/v1\/channels$/, name: 'listChannels', scope: 'read' },
-  { method: 'GET', pattern: new RegExp(`^/v1/channels/${ID}$`), name: 'getChannel', scope: 'read' },
-  { method: 'GET', pattern: new RegExp(`^/v1/channels/${ID}/messages$`), name: 'listMessages', scope: 'read' },
-  { method: 'POST', pattern: new RegExp(`^/v1/channels/${ID}/messages$`), name: 'postMessage', scope: 'write' },
-  { method: 'GET', pattern: new RegExp(`^/v1/channels/${ID}/messages/${ID}$`), name: 'getMessage', scope: 'read' },
-  { method: 'GET', pattern: new RegExp(`^/v1/channels/${ID}/messages/${ID}/replies$`), name: 'listReplies', scope: 'read' },
-  { method: 'POST', pattern: /^\/v1\/dms$/, name: 'openDm', scope: 'write' },
-  { method: 'GET', pattern: /^\/v1\/search$/, name: 'search', scope: 'read' },
+export const ROUTES: readonly Route[] = [
+  { method: 'GET', spec: '/me', pattern: /^\/v1\/me$/, name: 'me', scope: 'read' },
+  { method: 'GET', spec: '/users', pattern: /^\/v1\/users$/, name: 'listUsers', scope: 'read' },
+  { method: 'GET', spec: '/users/{userId}', pattern: new RegExp(`^/v1/users/${ID}$`), name: 'getUser', scope: 'read' },
+  { method: 'GET', spec: '/channels', pattern: /^\/v1\/channels$/, name: 'listChannels', scope: 'read' },
+  { method: 'GET', spec: '/channels/{channelId}', pattern: new RegExp(`^/v1/channels/${ID}$`), name: 'getChannel', scope: 'read' },
+  { method: 'GET', spec: '/channels/{channelId}/messages', pattern: new RegExp(`^/v1/channels/${ID}/messages$`), name: 'listMessages', scope: 'read' },
+  { method: 'POST', spec: '/channels/{channelId}/messages', pattern: new RegExp(`^/v1/channels/${ID}/messages$`), name: 'postMessage', scope: 'write' },
+  { method: 'GET', spec: '/channels/{channelId}/messages/{messageId}', pattern: new RegExp(`^/v1/channels/${ID}/messages/${ID}$`), name: 'getMessage', scope: 'read' },
+  { method: 'GET', spec: '/channels/{channelId}/messages/{messageId}/replies', pattern: new RegExp(`^/v1/channels/${ID}/messages/${ID}/replies$`), name: 'listReplies', scope: 'read' },
+  { method: 'POST', spec: '/dms', pattern: /^\/v1\/dms$/, name: 'openDm', scope: 'write' },
+  { method: 'GET', spec: '/search', pattern: /^\/v1\/search$/, name: 'search', scope: 'read' },
 ];
 
 /** Hosting serves the API under /api (see firebase.json); the function alone serves it at /. */
@@ -54,10 +56,15 @@ export function normalizePath(path: string): string {
   return p || '/';
 }
 
+/** Paths that should send a browser to the API reference instead of returning JSON. */
+export function docsRedirect(path: string): boolean {
+  return ['/', '/v1', '/docs'].includes(normalizePath(path));
+}
+
 export function matchRoute(method: string, path: string): { name: RouteName; scope: Scope; params: string[] } {
   const p = normalizePath(path);
   const byPath = ROUTES.filter((r) => r.pattern.test(p));
-  if (!byPath.length) throw new ApiError(404, 'not_found', `No such endpoint: ${p}. See docs/API.md.`);
+  if (!byPath.length) throw new ApiError(404, 'not_found', `No such endpoint: ${p}. See /api/docs for the reference.`);
   const route = byPath.find((r) => r.method === method);
   if (!route) throw new ApiError(405, 'method_not_allowed', `Use ${byPath.map((r) => r.method).join(' or ')} for ${p}.`);
   return { name: route.name, scope: route.scope, params: p.match(route.pattern)!.slice(1) };

@@ -11,6 +11,7 @@ import { hashToken, isTokenFormat, newTypingKey, type Scope } from './tokens.js'
 import {
   ApiError,
   channelJson,
+  docsRedirect,
   matchRoute,
   messageJson,
   pageParams,
@@ -36,6 +37,9 @@ interface Caller {
  */
 export const api = onRequest({ invoker: 'public', maxInstances: 5, timeoutSeconds: 60 }, async (req, res) => {
   res.set('Cache-Control', 'no-store');
+  // Hosting serves /api/docs/ and /api/openapi.json as static files; bare /api, /api/v1 and
+  // /api/docs land here and go to the reference.
+  if (req.method === 'GET' && docsRedirect(req.path)) return void res.redirect(302, '/api/docs/');
   try {
     const route = matchRoute(req.method, req.path);
     const caller = await authenticate(req);

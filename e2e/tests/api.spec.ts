@@ -59,3 +59,27 @@ test.describe('API tokens', () => {
     expect((await r.json()).error.code).toBe('insufficient_scope');
   });
 });
+
+test.describe('API reference', () => {
+  // The production-mode preview (web/dist-emu) includes the docs, like Hosting does.
+  const PREVIEW = 'http://127.0.0.1:5318';
+
+  test('each deployment serves an interactive reference and the OpenAPI spec', async ({ page, request }) => {
+    const spec = await (await request.get(`${PREVIEW}/api/openapi.json`)).json();
+    expect(spec.openapi).toBe('3.1.0');
+    expect(Object.keys(spec.paths)).toContain('/channels/{channelId}/messages');
+    expect(spec.servers[0].url).toBe('/api/v1');
+
+    const errors: string[] = [];
+    page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+    await page.goto(`${PREVIEW}/api/docs/`);
+    await expect(page).toHaveTitle('Flack API');
+    await expect(page.getByRole('heading', { name: 'Flack API', level: 1 })).toBeVisible();
+    await page.goto(`${PREVIEW}/api/docs/#tag/messages/POST/channels/{channelId}/messages`);
+    await expect(page.getByRole('heading', { name: 'Post a message' })).toBeVisible();
+    // No Scalar extras, and nothing blocked by the page's Content-Security-Policy.
+    await expect(page.getByText('Ask AI')).toHaveCount(0);
+    await expect(page.getByText('Generate MCP')).toHaveCount(0);
+    expect(errors.filter((e) => /Content Security Policy|Refused/.test(e))).toEqual([]);
+  });
+});

@@ -36,6 +36,40 @@ The app is sized for ≤50 people. Two app-wide listeners grow with headcount ×
 - **Real-device push check** (Mac, Android, iPhone home-screen app) — never verified end to
   end; FCM isn't emulated.
 
+## One-click updates for installed copies
+
+Today an admin sees "update available" but someone must run `npm run update` from the original
+install folder, with its logins. Companies lose that folder (the installer leaves; Cloud Shell
+home folders expire after ~4 months unused), and the admin who sees the notice may not be a developer.
+
+**Design (agreed direction, not started):** the deployment updates itself.
+
+1. **Config lives in the project, not the folder.** Rebuild `project.env`, `web/.env.production` and
+   the functions env from Firestore (`config/`) and Google APIs, so any machine (Cloud Build, a fresh
+   Cloud Shell, a new laptop) can deploy. Prerequisite for everything below.
+2. **Update now button** on the admin page (with release notes, extra confirmation for majors) →
+   admin-only callable → starts a **Cloud Build** job in the company's project, running as a
+   dedicated least-privilege "Flack updater" service account (created by the installer; existing
+   installs get it from one last manual `npm run update`). The job downloads the exact release tag,
+   verifies its checksum, runs `scripts/deploy.sh` (no test suite; CI tested the release) and
+   writes progress to a Firestore doc that the admin page shows. Cost: ~10 build minutes per update
+   (free tier 2,500/month).
+3. **Release rules** so it can run unattended: every release works with existing data (or migrates
+   lazily), rules/indexes stay backward compatible for one version, and anything needing a human
+   step is a major version (the button shows the steps instead).
+4. **Later:** roll back to the previous tag (same job), opt-in automatic patch updates (nightly,
+   emails admins), update history.
+
+**Trust model:** whoever controls this repo can ship code into every install on click. Publish
+checksums at least, ideally signed releases (GitHub build attestations); let companies turn in-app
+updates off; only Flack admins can update, and the updater account can only deploy Flack.
+
+**Cheaper first step:** an "Update in Cloud Shell" button that opens Google's browser terminal at the
+right version with a short guide (one command), once item 1 exists.
+
+**Open decisions:** one-click vs Cloud Shell first; opt-in automatic patch updates; signed releases
+from day one or checksums first; admins only or a new "owner" role.
+
 ## Features (from the Slack comparison)
 - **Search upgrade (if needed).** v1 is a Firestore word index (whole words + word
   beginnings, AND across words, no ranking/typos). If people want phrases, ranking or typo
