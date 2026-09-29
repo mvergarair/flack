@@ -13,13 +13,34 @@ export function TypingIndicator({ channelId, testId = 'typing' }: { channelId: s
         : names.length === 2
           ? `${names[0]} and ${names[1]} are typing…`
           : 'Several people are typing…';
+  // Takes no space: it floats over the bottom edge of the messages, just above the composer,
+  // only while someone is typing (so there's no empty strip the rest of the time).
   return (
-    <div
-      aria-live="polite"
-      data-testid={testId}
-      style={{ height: 20, padding: '0 24px', fontSize: 12, color: 'var(--muted)', flexShrink: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
-    >
-      {text}
+    <div style={{ position: 'relative', height: 0, flexShrink: 0 }}>
+      <div
+        aria-live="polite"
+        data-testid={testId}
+        style={{
+          position: 'absolute',
+          left: 16,
+          right: 16,
+          bottom: 2,
+          padding: text ? '1px 8px' : 0,
+          fontSize: 12,
+          lineHeight: '18px',
+          color: 'var(--muted)',
+          background: text ? 'var(--bg)' : 'transparent',
+          borderRadius: 6,
+          width: 'fit-content',
+          maxWidth: 'calc(100% - 32px)',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+          pointerEvents: 'none',
+        }}
+      >
+        {text}
+      </div>
     </div>
   );
 }
