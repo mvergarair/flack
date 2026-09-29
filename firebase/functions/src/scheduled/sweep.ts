@@ -7,6 +7,7 @@ import { sendPush } from '../lib/push.js';
 import type { ChannelDoc, MessageDoc, ScheduledDoc, UserDoc } from '../lib/types.js';
 import { notificationBody } from '../notifications/recipients.js';
 import { cannotSend } from './checks.js';
+import { mentionNames, writeMessage } from '../lib/post.js';
 
 /**
  * Every 10 minutes: post due scheduled messages and fire due reminders. The app only offers
@@ -44,9 +45,7 @@ export async function runDue(now: number): Promise<{ sent: number; reminded: num
 async function postMessage(uid: string, ref: FirebaseFirestore.DocumentReference): Promise<'sent' | 'failed' | null> {
   // Mention names for the channel preview (read outside the transaction; cosmetic only).
   const pre = (await ref.get()).data() as ScheduledDoc | undefined;
-  const names = new Map<string, string>();
-  const ids = (pre?.mentions ?? []).filter((m) => !m.startsWith('!')).slice(0, 50);
-  if (ids.length) (await db.getAll(...ids.map((id) => db.doc(`users/${id}`)))).forEach((s) => s.exists && names.set(s.id, s.get('displayName')));
+  const names = await mentionNames(pre?.mentions ?? []);
 
   let failure: { reason: string; d: ScheduledDoc } | null = null;
   const result = await db.runTransaction(async (tx) => {
@@ -74,31 +73,17 @@ async function postMessage(uid: string, ref: FirebaseFirestore.DocumentReference
 
     // Same writes as the app's sendMessage(); the message id is this item's id, so a retry
     // can never post it twice (create() fails if it exists).
-    const alsoToChannel = !!(d.threadParentId && d.alsoToChannel);
-    tx.create(db.doc(`channels/${d.channelId}/messages/${ref.id}`), {
+    writeMessage(tx, {
+      uid,
+      channelId: d.channelId,
+      messageId: ref.id,
       text: d.text,
-      authorId: uid,
-      createdAt: FieldValue.serverTimestamp(),
-      threadParentId: d.threadParentId ?? null,
-      attachments: [],
       mentions: d.mentions ?? [],
-      replyCount: 0,
-      replyUserIds: [],
-      ...(alsoToChannel ? { alsoToChannel: true } : {}),
+      threadParentId: d.threadParentId ?? null,
+      parent,
+      alsoToChannel: !!d.alsoToChannel,
+      names,
     });
-    if (parentRef && parent) {
-      tx.update(parentRef, {
-        replyCount: FieldValue.increment(1),
-        lastReplyAt: FieldValue.serverTimestamp(),
-        replyUserIds: [...(parent.replyUserIds ?? []).filter((u) => u !== uid), uid].slice(-5),
-      });
-    }
-    if (!parentRef || alsoToChannel) {
-      tx.update(channelRef, {
-        lastMessageAt: FieldValue.serverTimestamp(),
-        lastMessage: { text: notificationBody(d.text, names, 0, 200), authorId: uid },
-      });
-    }
     tx.delete(ref);
     return 'sent' as const;
   });

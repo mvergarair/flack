@@ -7,6 +7,16 @@ a major version means you need to do something when updating, and the notes say 
 Shell: `cd flack && npm run update`). Your settings are kept. Admins also see an "update
 available" note on the People & invites page when a new release is out.
 
+## 1.2.0 (2026-09-29)
+
+- **HTTP API.** Read channels, messages, threads and people, search, open DMs and post
+  messages from scripts, CI and bots: `https://<project>.web.app/api/v1`. See
+  [docs/API.md](docs/API.md).
+- **Personal API tokens.** Avatar → **API tokens**: create read-only or read-and-post tokens
+  (shown once, stored only as a hash), see when each was last used, revoke anytime. Tokens act
+  as their owner and stop working if the owner is deactivated.
+- CI skips the test jobs for documentation-only changes.
+
 ## 1.1.0 (2026-09-29)
 
 **Updating from 1.0.0:** 1.0.0 doesn't have `npm run update` yet, so run `git pull` once first,

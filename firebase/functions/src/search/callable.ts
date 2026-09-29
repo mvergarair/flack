@@ -9,7 +9,7 @@ const PAGE = 20;
 const BATCH = 100;
 const MAX_SCAN = 600;
 
-interface SearchInput {
+export interface SearchInput {
   q?: string;
   channelId?: string;
   authorId?: string;
@@ -30,8 +30,11 @@ export const searchmessages = onCall(async (req) => {
   if (!uid || req.auth?.token.active !== true) throw new HttpsError('unauthenticated', 'Sign in first.');
   const me = (await db.doc(`users/${uid}`).get()).data() as UserDoc | undefined;
   if (me?.status !== 'active') throw new HttpsError('permission-denied', 'Your account is not active.');
+  return searchAs(uid, (req.data ?? {}) as SearchInput);
+});
 
-  const input = (req.data ?? {}) as SearchInput;
+/** Search as `uid` (an active user): the app's callable and the HTTP API both use this. */
+export async function searchAs(uid: string, input: SearchInput) {
   const { lookup, words: qWords } = queryTerms(String(input.q ?? '').slice(0, 200));
   if (!lookup.length) throw new HttpsError('invalid-argument', 'Type at least one word to search for.');
 
@@ -96,4 +99,4 @@ export const searchmessages = onCall(async (req) => {
     // More may exist if we stopped early; the client passes this back as `before`.
     nextBefore: exhausted && results.length < PAGE ? null : (before?.toMillis() ?? null),
   };
-});
+}
