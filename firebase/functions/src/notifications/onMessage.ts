@@ -3,6 +3,7 @@ import { logger } from 'firebase-functions/v2';
 import { Timestamp } from 'firebase-admin/firestore';
 import { db, isEmulator, rtdb } from '../lib/admin.js';
 import { sendPush } from '../lib/push.js';
+import { expireAt } from '../lib/ttl.js';
 import type { ChannelDoc, MessageDoc, UserDoc } from '../lib/types.js';
 import { unfurlMessage } from '../unfurl/unfurl.js';
 import { indexMessage } from '../search/index.js';
@@ -133,6 +134,7 @@ export const onmessagecreated = onDocumentCreated({ document: 'channels/{channel
       authorId: msg.authorId,
       preview: body.slice(0, 200),
       createdAt: msg.createdAt ?? Timestamp.now(),
+      expireAt: expireAt(),
     });
   }
   await batch.commit();

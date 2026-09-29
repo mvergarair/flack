@@ -21,6 +21,8 @@ export const emu = {
   query: <T = Record<string, unknown>>(collection: string): T[] => JSON.parse(cli('query', collection)),
   /** Fires the 10-minute scheduled-items sweep now (backdate: make every pending item due). */
   runScheduled: (opts: { backdate?: boolean } = {}) => cli('run-scheduled', JSON.stringify(opts)),
+  /** Runs the daily health snapshot and anonymous report now. */
+  runDaily: () => cli('run-daily'),
 };
 
 export const users = {

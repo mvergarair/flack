@@ -28,3 +28,5 @@ dist-emu/
 !/firebase/functions/.env.example
 /firebase/storage-cors.json
 /PLAN.md
+/telemetry/project.env
+/telemetry/functions/lib/

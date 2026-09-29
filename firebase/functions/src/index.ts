@@ -17,3 +17,4 @@ export { sendscheduled } from './scheduled/sweep.js';
 export { api } from './api/http.js';
 export { createapitoken, revokeapitoken } from './api/callables.js';
 export { setdefaultchannels } from './admin/settings.js';
+export { dailystats, recordvitals } from './stats/daily.js';

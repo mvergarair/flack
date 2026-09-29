@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import { useAuth } from '../auth/AuthProvider';
 import { useIsMobile } from '../lib/hooks';
+import { startPageLoadReporting } from '../lib/vitals';
 import { useWorkspace } from '../data/workspace';
 import { usePushSync } from '../data/push';
 import { notificationPath, type PushData } from '../lib/push-routing';
@@ -26,6 +27,7 @@ export function Shell() {
   const navigate = useNavigate();
   const [toast, setToast] = useState<PushData | null>(null);
   usePresence();
+  useEffect(startPageLoadReporting, []);
   useHotkeys();
 
   // Record my time zone (local time on profile cards, DND schedules).

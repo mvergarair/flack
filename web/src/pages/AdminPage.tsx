@@ -18,6 +18,8 @@ import { Modal } from '../components/Modal';
 import { MobileHeader } from './MobileHome';
 import { PlusIcon, SettingsIcon } from '../components/icons';
 import { WorkspaceSettings } from '../components/WorkspaceSettings';
+import { HealthCard } from '../components/HealthCard';
+import { TelemetryCard, TelemetryNotice } from '../components/TelemetryCard';
 import { usePageTitle } from '../data/branding';
 import styles from './AdminPage.module.css';
 
@@ -90,6 +92,7 @@ export function AdminPage() {
               </button>
             </span>
           </header>
+          <TelemetryNotice />
           {update && (
             <div className={styles.update} role="status" data-testid="update-banner">
               <strong>Flack {update.version} is available</strong> (you're on {FLACK_VERSION}).{' '}
@@ -201,6 +204,8 @@ export function AdminPage() {
               })}
             </ul>
           </section>
+          <HealthCard />
+          <TelemetryCard />
           <p className={styles.version} data-testid="flack-version">
             Flack {FLACK_VERSION}
           </p>

@@ -2,9 +2,12 @@
 # Shared by gcloud.sh / fb.sh / deploy.sh. Isolates every CLI from the user's global config.
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 FLACK_PROJECT="${FLACK_PROJECT:-}"
-# Written by `npm run setup` (scripts/install.sh); see scripts/project.env.example.
-# shellcheck disable=SC1091
-[[ -f "$ROOT/scripts/project.env" ]] && source "$ROOT/scripts/project.env"
+# Settings written by `npm run setup` (see scripts/project.env.example). FLACK_PROJECT_ENV
+# points the wrappers at another settings file (e.g. telemetry/project.env for the maintainers'
+# statistics project); they stay pinned to whichever project it names.
+PROJECT_ENV="${FLACK_PROJECT_ENV:-$ROOT/scripts/project.env}"
+# shellcheck source=/dev/null
+[[ -f "$PROJECT_ENV" ]] && source "$PROJECT_ENV"
 if [[ -z "${CLOUD_SHELL:-}" ]]; then
   # Cloud Shell is a throwaway VM already signed in to the user's account; elsewhere, fence
   # every CLI into repo-local config so the user's other projects are never touched.
@@ -16,7 +19,10 @@ SA_KEY="$ROOT/.secrets/flack-deployer.json"
 # Real-project credentials for firebase-tools: a deployer service account key if there is one,
 # otherwise the repo-local `firebase login` made by `npm run setup`.
 use_deployer_credentials() {
-  [[ -f "$SA_KEY" ]] && export GOOGLE_APPLICATION_CREDENTIALS="$SA_KEY"
+  # Only for the project the key belongs to (it has no rights anywhere else).
+  if [[ -f "$SA_KEY" ]] && grep -q "\"project_id\": *\"$FLACK_PROJECT\"" "$SA_KEY"; then
+    export GOOGLE_APPLICATION_CREDENTIALS="$SA_KEY"
+  fi
   return 0
 }
 

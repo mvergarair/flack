@@ -57,3 +57,31 @@ describe('workspace branding', () => {
     await bad({ css: 'body{}' });
   });
 });
+
+describe('health stats and the statistics switch', () => {
+  it('only admins read the daily stats and the statistics settings', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'stats/2026-09-29'), { messages24h: 3 });
+      await setDoc(doc(ctx.firestore(), 'config/telemetry'), { installId: 'x', enabled: true, lastReport: { schema: 1 } });
+    });
+    await assertSucceeds(getDoc(doc(fs(as(env, 'admin')), 'stats/2026-09-29')));
+    await assertFails(getDoc(doc(fs(as(env, 'member')), 'stats/2026-09-29')));
+    await assertSucceeds(getDoc(doc(fs(as(env, 'admin')), 'config/telemetry')));
+    await assertFails(getDoc(doc(fs(as(env, 'member')), 'config/telemetry')));
+    await assertFails(getDoc(doc(fs(env.unauthenticatedContext()), 'config/telemetry')));
+  });
+
+  it('admins switch statistics on or off, and nothing else', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'config/telemetry'), { installId: 'x', enabled: true });
+    });
+    const admin = fs(as(env, 'admin'));
+    await assertSucceeds(setDoc(doc(admin, 'config/telemetry'), { enabled: false }, { merge: true }));
+    await assertSucceeds(setDoc(doc(admin, 'config/telemetry'), { noticeSeen: true }, { merge: true }));
+    await assertFails(setDoc(doc(admin, 'config/telemetry'), { installId: 'spoofed' }, { merge: true }));
+    await assertFails(setDoc(doc(admin, 'config/telemetry'), { lastReport: { fake: true } }, { merge: true }));
+    await assertFails(setDoc(doc(fs(as(env, 'member')), 'config/telemetry'), { enabled: false }, { merge: true }));
+    await assertFails(setDoc(doc(admin, 'stats/2026-09-29'), { messages24h: 1 }));
+  });
+});
+

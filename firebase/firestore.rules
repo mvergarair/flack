@@ -75,9 +75,23 @@ service cloud.firestore {
     // ---------- config ----------
     match /config/{docId} {
       // Branding is public (the sign-in page shows it); the rest is for members.
-      allow read: if docId == 'branding' || isActive();
-      // Admins set the branding; everything else is written by Cloud Functions only.
+      allow read: if docId == 'branding' || (docId == 'telemetry' ? isAdmin() : isActive());
+      // Admins set the branding and switch anonymous statistics on or off; everything else is
+      // written by Cloud Functions only.
       allow write: if docId == 'branding' && isAdmin() && validBranding(request.resource.data);
+      allow update: if docId == 'telemetry' && isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['enabled', 'noticeSeen'])
+        && request.resource.data.enabled is bool
+        && (!('noticeSeen' in request.resource.data) || request.resource.data.noticeSeen is bool);
+      allow create: if docId == 'telemetry' && isAdmin()
+        && request.resource.data.keys().hasOnly(['enabled', 'noticeSeen'])
+        && request.resource.data.enabled is bool;
+    }
+
+    // Daily health snapshots and page-load counters (written by functions; admins read).
+    match /stats/{docId} {
+      allow read: if isAdmin();
+      allow write: if false;
     }
     function validBranding(d) {
       return d.keys().hasOnly(['name', 'tagline', 'logo', 'accent', 'sidebar', 'updatedAt', 'updatedBy'])

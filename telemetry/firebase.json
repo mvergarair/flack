@@ -1,0 +1,31 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "telemetry",
+      "runtime": "nodejs22",
+      "ignore": ["node_modules", ".git", "*.log", "src"],
+      "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run build"]
+    }
+  ],
+  "hosting": {
+    "public": "public",
+    "rewrites": [
+      { "source": "/v1/report", "function": { "functionId": "report", "region": "us-central1" } },
+      { "source": "/v1/stats", "function": { "functionId": "stats", "region": "us-central1" } }
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "Referrer-Policy", "value": "no-referrer" }
+        ]
+      }
+    ]
+  }
+}

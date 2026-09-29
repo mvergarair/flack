@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Flack in numbers</title>
+    <meta name="description" content="Anonymous, aggregate statistics from Flack installs that share usage statistics." />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="stats.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="top">
+        <a class="brand" href="https://mvergarair.github.io/flack/"><img src="favicon.svg" alt="" width="28" height="28" /> Flack</a>
+        <a href="https://github.com/mvergarair/flack/blob/main/TELEMETRY.md">What's collected</a>
+      </header>
+      <h1>Flack <span class="grad">in numbers</span></h1>
+      <p class="lede">
+        Aggregate statistics from Flack installs that share anonymous usage statistics, updated daily. No messages, names,
+        emails or anything anyone wrote is ever collected, and admins can turn sharing off anytime.
+      </p>
+      <p id="status" class="muted">Loading…</p>
+
+      <section id="content" hidden>
+        <div class="big">
+          <div class="card"><span>Active installs (30 days)</span><strong id="installs">–</strong></div>
+          <div class="card"><span>Median function latency (p95)</span><strong id="p95">–</strong></div>
+          <div class="card"><span>Installs with any errors yesterday</span><strong id="errors">–</strong></div>
+          <div class="card"><span>Median share of the free read quota</span><strong id="reads">–</strong></div>
+        </div>
+
+        <div class="card wide"><h2>Active installs over time</h2><svg id="history" viewBox="0 0 600 160" preserveAspectRatio="none" role="img" aria-label="Active installs over time"></svg></div>
+
+        <div class="grid">
+          <div class="card"><h2>Versions</h2><div id="versions" class="bars"></div></div>
+          <div class="card"><h2>Team size (active this week)</h2><div id="teamSize" class="bars"></div></div>
+          <div class="card"><h2>Messages per day</h2><div id="messages" class="bars"></div></div>
+          <div class="card"><h2>Features in use</h2><div id="features" class="bars"></div></div>
+          <div class="card"><h2>Page load (p75)</h2><div id="pageLoad" class="bars"></div></div>
+          <div class="card"><h2>Regions</h2><div id="regions" class="bars"></div></div>
+        </div>
+        <p class="muted" id="updated"></p>
+      </section>
+    </main>
+    <script src="stats.js" defer></script>
+  </body>
+</html>

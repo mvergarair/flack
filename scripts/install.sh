@@ -46,7 +46,7 @@ ok "Dependencies"
 
 # --- 2. Settings -----------------------------------------------------------------------------
 step "Settings"
-FLACK_PROJECT="" FLACK_REGION="" ADMIN_EMAIL="" BUDGET_USD=""
+FLACK_PROJECT="" FLACK_REGION="" ADMIN_EMAIL="" BUDGET_USD="" TELEMETRY=""
 [[ -f scripts/project.env ]] && source scripts/project.env
 suggest="${FLACK_PROJECT:-flack-$(node -p 'require("crypto").randomBytes(3).toString("hex").slice(0, 5)')}"
 ask FLACK_PROJECT "Firebase project id (new or existing; 6-30 chars, a-z 0-9 -)" "$suggest"
@@ -56,6 +56,15 @@ ask FLACK_REGION "Region for the database and files" "${FLACK_REGION:-us-central
 ask ADMIN_EMAIL "Your Google account email (becomes the first admin)" "${ADMIN_EMAIL:-}"
 [[ "$ADMIN_EMAIL" == *@*.* ]] || fail "Enter the email of the Google account you'll sign in with."
 ask BUDGET_USD "Monthly budget alert in USD (0 = none)" "${BUDGET_USD:-5}"
+echo "  Flack can send its maintainers one small anonymous report a day (version, size ranges,"
+echo "  features used, error counts). Never messages, names, emails or anything anyone wrote."
+echo "  Details: TELEMETRY.md. You can change this anytime on the admin page."
+ask TELEMETRY "Share anonymous usage statistics? (yes/no)" "${TELEMETRY:-yes}"
+case "$(echo "$TELEMETRY" | tr '[:upper:]' '[:lower:]')" in
+  y | yes | on) TELEMETRY=yes ;;
+  n | no | off) TELEMETRY=no ;;
+  *) fail "Answer yes or no." ;;
+esac
 
 cat > scripts/project.env <<EOF
 # Written by scripts/install.sh. The ONLY real Google Cloud / Firebase project these scripts
@@ -64,6 +73,7 @@ FLACK_PROJECT="$FLACK_PROJECT"
 FLACK_REGION="$FLACK_REGION"
 ADMIN_EMAIL="$ADMIN_EMAIL"
 BUDGET_USD="$BUDGET_USD"
+TELEMETRY="$TELEMETRY"
 EOF
 ok "Saved scripts/project.env"
 
@@ -213,6 +223,9 @@ cat > "firebase/functions/.env.$FLACK_PROJECT" <<EOF
 # Written by scripts/install.sh. The first account with this email to sign in becomes admin.
 FIRST_ADMIN_EMAIL=$ADMIN_EMAIL
 APP_URL=https://$FLACK_PROJECT.web.app
+FLACK_REGION=$FLACK_REGION
+# Anonymous usage statistics (TELEMETRY.md): on or off. Admins can also switch them off in the app.
+FLACK_TELEMETRY=$([[ "$TELEMETRY" == yes ]] && echo on || echo off)
 EOF
 ok "firebase/functions/.env.$FLACK_PROJECT"
 
