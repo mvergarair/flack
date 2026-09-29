@@ -44,7 +44,7 @@ describe('sendscheduled', () => {
     expect(query('channels/cGeneral/messages').filter((m) => m.id === 'sm1')).toHaveLength(1);
   }, 60_000);
 
-  it('marks messages that can no longer be sent as failed and tells the author', async () => {
+  it('marks messages that can no longer be sent as failed and tells the author in their Flackbot DM', async () => {
     set('users/uMember2/scheduled/nope', item({ kind: 'message', sendAt: past(), text: 'secret plans', channelId: 'cSecret', mentions: [] }));
     set('channels/cRandom', { archived: true });
     set('users/uMember/scheduled/arch', item({ kind: 'message', sendAt: past(), text: 'to archived', channelId: 'cRandom', mentions: [] }));
@@ -54,10 +54,13 @@ describe('sendscheduled', () => {
     expect(get('channels/cSecret/messages/nope')).toBeNull();
     expect(get('users/uMember2/scheduled/nope')).toMatchObject({ status: 'failed', error: expect.stringMatching(/no longer a member/) });
     expect(get('users/uMember/scheduled/arch')).toMatchObject({ status: 'failed', error: expect.stringMatching(/archived/) });
-    expect(get('users/uMember/activity/sf_arch')).toMatchObject({ kind: 'schedule-failed', preview: 'to archived' });
+    const notice = query<{ authorId: string; text: string; botRef: { kind: string } }>('channels/dm_flackbot_uMember/messages').filter((m) => m.botRef?.kind !== 'welcome');
+    expect(notice).toHaveLength(1);
+    expect(notice[0]).toMatchObject({ authorId: 'flackbot', botRef: { kind: 'schedule-failed' } });
+    expect(notice[0].text).toMatch(/in #random couldn't be sent: .*archived[\s\S]*to archived/);
   }, 60_000);
 
-  it('fires reminders into Activity (with a push), about a message or free text', async () => {
+  it('sends reminders to your Flackbot DM (pushed like a DM), about a message or free text, once', async () => {
     set('users/uMember/private/tokens', { tokens: { tok1: true } });
     set('users/uMember/scheduled/r1', item({ kind: 'reminder', sendAt: past(), text: 'call Ana', channelId: null, messageId: null }));
     set('users/uMember/scheduled/r2', item({ kind: 'reminder', sendAt: past(), text: 'Look at the upload flow', channelId: 'cEngineering', messageId: 'eng0' }));
@@ -65,22 +68,39 @@ describe('sendscheduled', () => {
     cli('run-scheduled');
 
     expect(get('users/uMember/scheduled/r1')).toBeNull();
-    expect(get('users/uMember/activity/r_r1')).toMatchObject({ kind: 'reminder', preview: 'call Ana', channelId: null });
-    expect(get('users/uMember/activity/r_r2')).toMatchObject({ kind: 'reminder', channelId: 'cEngineering', messageId: 'eng0' });
-    const pushes = query<{ uid: string; kind: string; title: string; body: string; link: string }>('_debug/pushes/items').filter((p) => p.kind === 'reminder');
-    expect(pushes.map((p) => p.body).sort()).toEqual(['Look at the upload flow', 'call Ana']);
-    expect(pushes.find((p) => p.body === 'call Ana')?.link).toMatch(/\/activity$/);
-    expect(pushes.find((p) => p.body !== 'call Ana')?.link).toMatch(/\/c\/cEngineering\?m=eng0$/);
+    expect(get('channels/dm_flackbot_uMember')).toMatchObject({ type: 'dm', memberIds: ['flackbot', 'uMember'] });
+    expect(get('channels/dm_flackbot_uMember/messages/r_r1')).toMatchObject({ authorId: 'flackbot', text: '⏰ Reminder: call Ana', botRef: { kind: 'reminder' } });
+    expect(get('channels/dm_flackbot_uMember/messages/r_r2')).toMatchObject({
+      text: '⏰ Reminder: Look at the upload flow',
+      botRef: { kind: 'reminder', channelId: 'cEngineering', messageId: 'eng0', threadParentId: null },
+    });
+    await expect
+      .poll(() => query<{ title: string; body: string }>('_debug/pushes/items').filter((p) => p.title === 'Flackbot').map((p) => p.body).sort(), { timeout: 15_000 })
+      .toEqual(['⏰ Reminder: Look at the upload flow', '⏰ Reminder: call Ana']);
+
+    // The DM didn't exist yet, so Flackbot's welcome comes first (and sends no push).
+    expect(get('channels/dm_flackbot_uMember/messages/welcome_uMember')).toMatchObject({ authorId: 'flackbot', botRef: { kind: 'welcome' }, text: expect.stringMatching(/I'm Flackbot/) });
+
+    cli('run-scheduled');
+    expect(query('channels/dm_flackbot_uMember/messages')).toHaveLength(3);
   }, 60_000);
 
-  it('holds reminder pushes during Do Not Disturb (Activity still gets them)', async () => {
+  it('holds reminder pushes during Do Not Disturb (the DM still gets them)', async () => {
     set('users/uMember/private/tokens', { tokens: { tok1: true } });
     set('users/uMember', { dnd: { until: { __ts: Date.now() + 3_600_000 } } });
     set('users/uMember/scheduled/r3', item({ kind: 'reminder', sendAt: past(), text: 'quiet one', channelId: null, messageId: null }));
 
     cli('run-scheduled');
 
-    expect(get('users/uMember/activity/r_r3')).toMatchObject({ kind: 'reminder' });
-    expect(query<{ body: string }>('_debug/pushes/items').filter((p) => p.body === 'quiet one')).toHaveLength(0);
+    expect(get('channels/dm_flackbot_uMember/messages/r_r3')).toMatchObject({ text: '⏰ Reminder: quiet one' });
+    await new Promise((r) => setTimeout(r, 3000));
+    expect(query<{ body: string }>('_debug/pushes/items').filter((p) => p.body.includes('quiet one'))).toHaveLength(0);
+  }, 60_000);
+
+  it('skips reminders for people who were deactivated', async () => {
+    set('users/uGone/scheduled/r4', item({ kind: 'reminder', sendAt: past(), text: 'too late', channelId: null, messageId: null }));
+    cli('run-scheduled');
+    expect(get('users/uGone/scheduled/r4')).toBeNull();
+    expect(get('channels/dm_flackbot_uGone')).toBeNull();
   }, 60_000);
 });

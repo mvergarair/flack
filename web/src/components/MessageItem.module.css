@@ -491,3 +491,31 @@
   right: 20px;
   z-index: 45;
 }
+
+.botBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  margin-top: 4px;
+}
+.botSnooze {
+  position: relative;
+}
+.botNote {
+  color: var(--muted);
+  font-size: 13px;
+}
+.botLink {
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+.botLink:hover {
+  text-decoration: underline;
+}

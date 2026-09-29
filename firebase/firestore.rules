@@ -75,10 +75,12 @@ service cloud.firestore {
     // ---------- config ----------
     match /config/{docId} {
       // Branding is public (the sign-in page shows it); the rest is for members.
-      allow read: if docId == 'branding' || (docId == 'telemetry' ? isAdmin() : isActive());
+      allow read: if docId == 'branding' || (docId in ['telemetry', 'bot'] ? isAdmin() : isActive());
       // Admins set the branding and switch anonymous statistics on or off; everything else is
       // written by Cloud Functions only.
       allow write: if docId == 'branding' && isAdmin() && validBranding(request.resource.data);
+      // Flackbot's welcome message and auto-responses (functions re-validate every entry).
+      allow write: if docId == 'bot' && isAdmin() && validBot(request.resource.data);
       allow update: if docId == 'telemetry' && isAdmin()
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['enabled', 'noticeSeen'])
         && request.resource.data.enabled is bool
@@ -92,6 +94,13 @@ service cloud.firestore {
     match /stats/{docId} {
       allow read: if isAdmin();
       allow write: if false;
+    }
+    function validBot(d) {
+      return d.keys().hasOnly(['welcome', 'responses', 'updatedAt', 'updatedBy'])
+        && d.welcome is string && d.welcome.size() <= 2000
+        && d.responses is list && d.responses.size() <= 50
+        && d.updatedAt == request.time
+        && d.updatedBy == request.auth.uid;
     }
     function validBranding(d) {
       return d.keys().hasOnly(['name', 'tagline', 'logo', 'accent', 'sidebar', 'updatedAt', 'updatedBy'])
@@ -268,6 +277,8 @@ service cloud.firestore {
         && uniqueList(request.resource.data.memberIds)
         && request.auth.uid in request.resource.data.memberIds
         && request.resource.data.memberIds.size() <= 100
+        // Flackbot's DMs are created by functions only (bot/bot.ts).
+        && !('flackbot' in request.resource.data.memberIds)
         && safeId(channelId)
         && request.resource.data.keys().hasOnly(['name', 'type', 'memberIds', 'createdBy', 'archived', 'createdAt', 'topic', 'typingKey'])
         && (!('typingKey' in request.resource.data) || validTypingKey(request.resource.data.typingKey))
@@ -300,6 +311,7 @@ service cloud.firestore {
             && changed().hasOnly(['memberIds'])
             && uniqueList(request.resource.data.memberIds)
             && request.resource.data.memberIds.toSet().hasAll(resource.data.memberIds)
+            && !('flackbot' in request.resource.data.memberIds)
             && request.resource.data.memberIds.size() <= 100)
           // Creator or admin: rename, topic, archive.
           || ((resource.data.createdBy == request.auth.uid || isAdmin())

@@ -18,7 +18,9 @@ export interface UserProfile {
   photoURL: string | null;
   title?: string;
   role: Role;
-  status: 'active' | 'deactivated';
+  /** 'bot' is Flackbot (lib/bot.ts), which the app adds itself; it's not a user document. */
+  status: 'active' | 'deactivated' | 'bot';
+  bot?: true;
   /** Three emoji shown in the message hover bar (defaults to 👍 ✅ 👀). */
   quickReactions?: string[];
   /** Custom status ("🌴 On vacation"); hidden once expiresAt has passed. */
@@ -78,6 +80,8 @@ export interface Message {
   alsoToChannel?: boolean;
   /** Written by the unfurl function. */
   linkPreviews?: LinkPreview[];
+  /** Flackbot messages: what they refer to (the message a reminder is about, etc.). */
+  botRef?: { kind: 'reminder' | 'schedule-failed' | 'welcome'; text?: string; channelId?: string; messageId?: string; threadParentId?: string | null };
 }
 
 export interface SavedItem {

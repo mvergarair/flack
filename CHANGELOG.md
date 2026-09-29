@@ -7,6 +7,22 @@ a major version means you need to do something when updating, and the notes say 
 Shell: `cd flack && npm run update`). Your settings are kept. Admins also see an "update
 available" note on the People & invites page when a new release is out.
 
+## 1.6.0 (2026-09-29)
+
+- **Flackbot.** A built-in bot with its own DM for everyone:
+  - **Reminders arrive from Flackbot**, with a link to the message they're about and a Snooze
+    button. They're pushed like any DM and respect Do Not Disturb.
+  - **Scheduled messages that can't go out** are reported there too, with a link to fix them.
+  - **A welcome message** for each person the first time they open Flack (existing members get
+    it after this update). Admins can write their own on the People & invites page.
+  - **Automatic answers:** admins set phrases ("wifi password") and replies; when a message
+    contains one, Flackbot answers in the same channel or thread. Up to 50.
+  - Flackbot isn't a person: it doesn't count as a member, can't be added to channels, and
+    nobody can post as it.
+- Reminders and failed scheduled messages no longer create Activity items (older ones stay).
+- Fixed a console error when scrolling back in a conversation whose first message was still
+  sending.
+
 ## 1.5.1 (2026-09-29)
 
 - **Installer and update fix.** 1.5.0 added two Google Cloud services, which put the list over

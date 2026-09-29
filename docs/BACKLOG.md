@@ -79,6 +79,35 @@ right version with a short guide (one command), once item 1 exists.
 **Open decisions:** one-click vs Cloud Shell first; opt-in automatic patch updates; signed releases
 from day one or checksums first; admins only or a new "owner" role.
 
+## Ask Flackbot (AI answers over your messages)
+Phase 3 of Flackbot (phase 1, the bot itself, shipped in 1.6.0; phase 2 is incoming webhooks
+and named bot users with their own API tokens). A conversational assistant in each person's
+Flackbot DM that looks things up in the messages *they* can read.
+- **One callable, `askflackbot`** (not a trigger): checks sign-in, active, the daily cap and
+  the monthly spend cap; saves the question in the person's Flackbot DM; runs the Claude tool
+  loop (TypeScript SDK tool runner); streams the draft answer to RTDB `botDrafts/{uid}`
+  (cheap, temporary, like typing); writes the final answer as one normal Flackbot message
+  with links to the messages it used. Streaming through Firestore updates would fire
+  `onmessageupdated` a dozen times per answer.
+- **It runs as the asker, read-only.** Tools: `search_messages` → `searchAs(uid, …)`,
+  `read_channel` / `read_thread` (membership re-checked, ≤50 messages, snippets),
+  `list_my_channels`, `find_people`. No write tools, so a message crafted to hijack the bot
+  can at worst produce a wrong answer. Message contents go to the model marked as data.
+- **Conversation:** the last ~20 messages of the DM; a "New chat" divider starts fresh.
+- **`@flackbot` in channels (later):** the answer is visible to the whole channel, so tools
+  are limited to that channel.
+- **Provider:** Claude through Vertex AI in the install's own project (no key, same Google
+  bill; the admin enables the model in Model Garden once), or an Anthropic API key pasted on
+  the admin page (stored where clients can't read it). Default model Claude Opus 5.5 at low
+  effort; admins can pick Claude Sonnet 5.5 for about half the cost.
+- **Cost controls:** off by default; prompt caching for the fixed instructions and tool
+  definitions; tool results capped (20 hits, snippets); ≤6 tool rounds; per-person daily
+  cap (default 30); monthly spend cap from `usage` (Flackbot pauses with a note). Rough cost:
+  5–10¢ per question on Opus 5.5, 3–5¢ on Sonnet 5.5. Usage on the Health card; "AI in use"
+  as a yes/no in the anonymous report.
+- **Tests:** tool permission checks as function tests (a private channel you're not in never
+  reaches the model); the loop against a fake model in the emulator; e2e with a stubbed reply.
+
 ## Features (from the Slack comparison)
 - **Search upgrade (if needed).** v1 is a Firestore word index (whole words + word
   beginnings, AND across words, no ranking/typos). If people want phrases, ranking or typo

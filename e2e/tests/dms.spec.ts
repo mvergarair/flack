@@ -51,7 +51,8 @@ test.describe('direct messages', () => {
     await page.getByTestId('quick-persons').getByRole('button', { name: /Tomás Araya/ }).click();
     await expect(page).toHaveURL(/\/c\/dm_uMember_uMember2$/);
     await expect(page.getByTestId('message-list')).toContainText('first');
-    const dms = emu.query<{ id: string; type: string }>('channels').filter((c) => c.type === 'dm');
+    // (Everyone also has a Flackbot DM.)
+    const dms = emu.query<{ id: string; type: string }>('channels').filter((c) => c.type === 'dm' && !c.id.includes('flackbot'));
     expect(dms.map((d) => d.id)).toEqual(['dm_uMember_uMember2']);
   });
 
