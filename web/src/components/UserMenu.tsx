@@ -5,6 +5,7 @@ import { Avatar } from './Avatar';
 import { ProfileDialog } from './ProfileDialog';
 import { NotificationSettings } from './NotificationSettings';
 import { StatusDialog } from './StatusDialog';
+import { ApiTokensDialog } from './ApiTokensDialog';
 import { StatusEmoji } from './StatusEmoji';
 import { activeStatus } from '../lib/status';
 import { setManualAway, useManualAway } from '../data/presence';
@@ -16,7 +17,7 @@ import styles from './UserMenu.module.css';
 export function UserMenu({ variant = 'sidebar' }: { variant?: 'sidebar' | 'mobile' }) {
   const me = useMe();
   const [open, setOpen] = useState(false);
-  const [dialog, setDialog] = useState<'profile' | 'notifications' | 'status' | null>(null);
+  const [dialog, setDialog] = useState<'profile' | 'notifications' | 'status' | 'api' | null>(null);
   const status = activeStatus(me);
   const away = useManualAway();
   const now = useNow(60_000);
@@ -63,6 +64,9 @@ export function UserMenu({ variant = 'sidebar' }: { variant?: 'sidebar' | 'mobil
             <button role="menuitem" onClick={() => (setOpen(false), setDialog('notifications'))} data-testid="dnd-menuitem">
               <BellIcon size={16} /> {dnd ? 'Notifications paused 🌙' : 'Pause notifications…'}
             </button>
+            <button role="menuitem" onClick={() => (setOpen(false), setDialog('api'))}>
+              API tokens
+            </button>
             <button role="menuitem" onClick={() => void signOut()}>
               <LogOutIcon size={16} /> Sign out
             </button>
@@ -72,6 +76,7 @@ export function UserMenu({ variant = 'sidebar' }: { variant?: 'sidebar' | 'mobil
       {dialog === 'profile' && <ProfileDialog onClose={() => setDialog(null)} />}
       {dialog === 'notifications' && <NotificationSettings onClose={() => setDialog(null)} />}
       {dialog === 'status' && <StatusDialog onClose={() => setDialog(null)} />}
+      {dialog === 'api' && <ApiTokensDialog onClose={() => setDialog(null)} />}
     </div>
   );
 }

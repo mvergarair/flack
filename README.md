@@ -40,6 +40,7 @@
 - **Notifications:** web push on desktop, Android and iPhone home-screen apps; per-channel levels; Do Not Disturb with schedules.
 - **The small things:** reactions with your own quick picks, pins, mark unread, edit with ↑, typing indicators, online/away/last seen, custom status, profile cards with local time, link previews, file uploads up to 50 MB.
 - **Admin:** invite-only (Google sign-in), invite links, roles, deactivate anyone instantly.
+- **HTTP API:** read channels and messages, search, and post messages from scripts, CI and bots with personal API tokens ([docs/API.md](docs/API.md)).
 - **Everywhere:** a single PWA for Mac, Windows, iPhone, Android and the browser, with light and dark themes.
 
 ## Install
@@ -144,6 +145,20 @@ Your data lives only in your Google Cloud project. There's no Flack server and n
 - **Web hardening.** Markdown is sanitized with DOMPurify; hosting sends a strict Content-Security-Policy, `X-Frame-Options: DENY` and `nosniff`.
 
 Found a problem? Please open a private security advisory on GitHub.
+
+## API
+
+Every deployment includes an HTTP API at `https://<project>.web.app/api/v1` for scripts, CI and
+bots. Create a token in the app (avatar → **API tokens**), then:
+
+```bash
+curl -X POST https://<project>.web.app/api/v1/channels/CHANNEL_ID/messages \
+  -H "Authorization: Bearer flk_…" -H "Content-Type: application/json" \
+  -d '{"text": "✅ Deployed to production"}'
+```
+
+Tokens act as their owner (same channels, same rules), can be read-only, are stored only as a
+hash and can be revoked anytime. Endpoints, errors and examples: [docs/API.md](docs/API.md).
 
 ## Keyboard shortcuts
 

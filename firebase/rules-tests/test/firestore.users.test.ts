@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, it } from 'vitest';
 import { assertFails, assertSucceeds, type RulesTestEnvironment } from '@firebase/rules-unit-testing';
-import { collection, deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, addDoc, serverTimestamp, where } from 'firebase/firestore';
 import { as, fs, makeEnv, seed, ts, userDoc } from './setup.ts';
 
 let env: RulesTestEnvironment;
@@ -208,6 +208,21 @@ describe('saved items, time zone and Do Not Disturb', () => {
     await assertFails(updateDoc(ref, { dnd: { until: null, mode: 'loud' } }));
     await assertFails(updateDoc(ref, { timeZone: 'x'.repeat(65) }));
     await assertFails(updateDoc(doc(fs(as(env, 'admin')), 'users/member'), { dnd: { until: null } }));
+  });
+});
+
+describe('API tokens', () => {
+  it('owners read their own token metadata; nobody writes it directly', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'apiTokens/h1'), { uid: 'member', name: 'ci', scopes: ['read'], prefix: 'flk_abc', createdAt: ts(), lastUsedAt: null });
+    });
+    await assertSucceeds(getDoc(doc(fs(as(env, 'member')), 'apiTokens/h1')));
+    await assertSucceeds(getDocs(query(collection(fs(as(env, 'member')), 'apiTokens'), where('uid', '==', 'member'))));
+    await assertFails(getDoc(doc(fs(as(env, 'member2')), 'apiTokens/h1')));
+    await assertFails(getDocs(collection(fs(as(env, 'member')), 'apiTokens')));
+    await assertFails(setDoc(doc(fs(as(env, 'member')), 'apiTokens/h2'), { uid: 'member', name: 'x', scopes: ['write'] }));
+    await assertFails(updateDoc(doc(fs(as(env, 'member')), 'apiTokens/h1'), { scopes: ['read', 'write'] }));
+    await assertFails(deleteDoc(doc(fs(as(env, 'member')), 'apiTokens/h1')));
   });
 });
 

@@ -44,7 +44,7 @@ Nothing here touches a real Google Cloud project: the emulators use the `demo-fl
 
 ## Pull requests
 
-- CI runs on every PR: shell-script lint, typecheck, unit tests, a production build check, the
+- CI runs on every PR (documentation-only changes skip the test jobs): shell-script lint, typecheck, unit tests, a production build check, the
   security-rules and function tests on the emulators, end-to-end tests in Chromium, WebKit and
   phone viewports, and CodeQL. All must pass before merging.
 - Keep PRs focused; one feature or fix per PR.
