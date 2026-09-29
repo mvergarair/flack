@@ -106,6 +106,8 @@ when a new [release](https://github.com/mvergarair/flack/releases) is out; see
 [CHANGELOG.md](CHANGELOG.md) for what changed. Use **Watch → Custom → Releases** on GitHub to
 get an email for each one.
 
+On 1.0.0, run `git pull` once first: `npm run update` arrived in 1.1.0.
+
 If you changed Flack's code yourself, `npm run update` stops before touching anything; merge
 with `git pull`, then run it again. Contributors can use `npm run deploy`, which runs the full
 test suite first (needs Java 21 and Playwright browsers).

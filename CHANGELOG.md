@@ -9,6 +9,9 @@ available" note on the People & invites page when a new release is out.
 
 ## 1.1.0 (2026-09-29)
 
+**Updating from 1.0.0:** 1.0.0 doesn't have `npm run update` yet, so run `git pull` once first,
+then `npm run update`. From then on, `npm run update` alone is enough.
+
 - **Update in one command.** `npm run update` pulls the latest code, turns on any Google Cloud
   services a new version needs, and deploys, keeping your settings.
 - **Update notices.** Admins see the running version on the People & invites page, and a
