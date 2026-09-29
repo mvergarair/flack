@@ -15,6 +15,12 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/mvergarair/flack/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/mvergarair/flack/actions/workflows/ci.yml/badge.svg" /></a>
+  <a href="https://github.com/mvergarair/flack/releases"><img alt="Release" src="https://img.shields.io/github/v/release/mvergarair/flack" /></a>
+  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-green" /></a>
+</p>
+
+<p align="center">
   <a href="https://mvergarair.github.io/flack/">Website</a> ·
   <a href="#install">Install</a> ·
   <a href="#costs">Costs</a> ·
@@ -83,7 +89,28 @@ your team from **Admin**.
 - **Install the app.** Chrome and Edge: the install icon in the address bar. Safari on Mac: File → Add to Dock. iPhone: Share → Add to Home Screen. Android: ⋮ → Install app.
 - **Notifications.** Avatar → Notifications → Turn on, on each device. On iPhone this only works in the Home Screen app (iOS 16.4+).
 - **Same-origin sign-in on iPhone (optional).** To keep sign-in inside the installed iOS app, set `VITE_FIREBASE_AUTH_DOMAIN=<project>.web.app` in `web/.env.production`. Then add `https://<project>.web.app/__/auth/handler` to the OAuth client's redirect URIs (Google Cloud console → APIs & Services → Credentials) and redeploy.
-- **Update.** Pull and run `npm run deploy`, which runs every test before deploying. `scripts/deploy.sh` deploys right away.
+
+### Updating
+
+Run this in your Flack folder (in Cloud Shell: `cd flack` first):
+
+```bash
+npm run update
+```
+
+It pulls the latest version, installs dependencies, turns on any Google Cloud services the new
+version needs and deploys. Your settings (`scripts/project.env`, `web/.env.production`,
+`firebase/functions/.env.<project>`) are never overwritten, and open apps pick up the new
+version by themselves. Admins see an **update available** note on the People & invites page
+when a new [release](https://github.com/mvergarair/flack/releases) is out; see
+[CHANGELOG.md](CHANGELOG.md) for what changed. Use **Watch → Custom → Releases** on GitHub to
+get an email for each one.
+
+On 1.0.0, run `git pull` once first: `npm run update` arrived in 1.1.0.
+
+If you changed Flack's code yourself, `npm run update` stops before touching anything; merge
+with `git pull`, then run it again. Contributors can use `npm run deploy`, which runs the full
+test suite first (needs Java 21 and Playwright browsers).
 
 ## Costs
 
@@ -184,6 +211,14 @@ otherwise they use the repo-local `firebase login` from `npm run setup`.
 - **Scheduled messages and reminders:** `sendscheduled` runs every 10 minutes, and the app only offers times on that grid. Messages go out as the author through the normal pipeline. Membership is re-checked at send time; anything that can no longer be sent shows as *Not sent* under Later.
 - **Search:** each message gets a separate index doc of accent-free words and word beginnings. Queries go through a callable that only searches channels you belong to.
 
+## Contributing
+
+Contributions are welcome, including ones made with AI coding agents. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for setup and the checklist, and [AGENTS.md](AGENTS.md) for the
+rules agents should follow. Every pull request runs the full CI: shell-script lint, typecheck,
+unit tests, a production build check, security-rules and function tests, end-to-end tests in
+Chromium, WebKit and phone viewports, and CodeQL.
+
 ## License
 
-[MIT](LICENSE). Flack is not affiliated with Slack or Google.
+[MIT](LICENSE). Flack is not affiliated with or endorsed by Slack or Google. Firebase is a trademark of Google LLC; Slack is a trademark of Slack Technologies, LLC.

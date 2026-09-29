@@ -1,5 +1,8 @@
 import { test, expect } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 import { asUser, callFunction, emu, open, signIn, users, PASSWORD } from '../helpers.ts';
+
+const VERSION = (JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), 'utf8')) as { version: string }).version;
 
 test.describe('admin screen', () => {
   test.beforeEach(() => {
@@ -99,5 +102,39 @@ test.describe('admin screen', () => {
     const res = await callFunction(users.member, 'createinvite', { email: 'sneaky@flack.test', role: 'admin' });
     expect(res.body.error?.status).toBe('PERMISSION_DENIED');
     expect(emu.query<{ email: string }>('invites').map((i) => i.email)).not.toContain('sneaky@flack.test');
+  });
+});
+
+test.describe('updates', () => {
+  test.beforeEach(() => {
+    emu.seed();
+  });
+
+  const fakeLatest = (page: import('@playwright/test').Page, tag: string) =>
+    page.route('https://api.github.com/repos/**/releases/latest', (route) =>
+      route.fulfill({ json: { tag_name: tag, html_url: `https://github.com/example/flack/releases/tag/${tag}` } }),
+    );
+  const enableCheck = (page: import('@playwright/test').Page) =>
+    page.addInitScript(() => localStorage.setItem('flack:updateCheck', '1'));
+
+  test('admins see the version and a notice when a newer release is out', async ({ page }) => {
+    await enableCheck(page);
+    await fakeLatest(page, 'v99.0.0');
+    await signIn(page, users.admin, '/admin');
+    await expect(page.getByTestId('flack-version')).toHaveText(`Flack ${VERSION}`);
+    const banner = page.getByTestId('update-banner');
+    await expect(banner).toContainText('Flack 99.0.0 is available');
+    await expect(banner).toContainText(`you're on ${VERSION}`);
+    await expect(banner.getByRole('link', { name: "What's new" })).toHaveAttribute('href', /releases\/tag\/v99\.0\.0$/);
+    await expect(banner).toContainText('npm run update');
+  });
+
+  test('no notice when this is the latest release', async ({ page }) => {
+    await enableCheck(page);
+    await fakeLatest(page, `v${VERSION}`);
+    await signIn(page, users.admin, '/admin');
+    await expect(page.getByTestId('flack-version')).toBeVisible();
+    await page.waitForTimeout(1000);
+    await expect(page.getByTestId('update-banner')).toHaveCount(0);
   });
 });

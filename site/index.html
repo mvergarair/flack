@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Flack · Team chat on your own Firebase</title>
+    <title>Flack · Team chat on your own Firebase project</title>
     <meta name="description" content="Open-source team chat (channels, threads, DMs, search, reminders, push) that deploys to your own Firebase project in one command. Pay-as-you-go; small teams usually pay $0." />
-    <meta property="og:title" content="Flack · Team chat on your own Firebase" />
+    <meta property="og:title" content="Flack · Team chat on your own Firebase project" />
     <meta property="og:description" content="Channels, threads, DMs, search, reminders and push notifications. Your project, your data, one command to install." />
     <meta property="og:image" content="assets/og.png" />
     <meta name="theme-color" content="#0f1a1d" />
@@ -47,7 +47,7 @@
         <div class="glow glow-a" aria-hidden="true"></div>
         <div class="glow glow-b" aria-hidden="true"></div>
         <div class="wrap hero-inner">
-          <h1>Team chat you own.<br /><span class="grad">On your own Firebase.</span></h1>
+          <h1>Team chat you own.<br /><span class="grad">On your own Firebase project.</span></h1>
           <p class="lede">
             Channels, threads, DMs, search, reminders and push notifications, deployed to
             <em>your</em> Google Cloud project with one command. Pay-as-you-go, and a small team
@@ -239,7 +239,7 @@ cd flack</code><button class="copy" aria-label="Copy">Copy</button></pre>
           <details><summary>How many people can use it?</summary><p>It's built for teams of 10–100 people, and larger teams work too. Past a few hundred people, the repo's backlog describes how to trim the always-on listeners (presence and the member directory) to keep costs flat.</p></details>
           <details><summary>Can I use my own domain?</summary><p>Yes. Add a custom domain in Firebase Hosting and add it to the authorized domains for sign-in.</p></details>
           <details><summary>Is it a real app on phones?</summary><p>It's an installable PWA: add it to the home screen on iPhone or install it on Android for push notifications and a full-screen app.</p></details>
-          <details><summary>How do I update?</summary><p>Pull the latest code and run <code>npm run deploy</code>. It runs the unit, rules and end-to-end tests before deploying.</p></details>
+          <details><summary>How do I update?</summary><p>Run <code>npm run update</code> in your Flack folder. It pulls the latest version, turns on anything new it needs and deploys, keeping your settings. Admins see a note in the app when a new release is out.</p></details>
         </div>
       </section>
 
@@ -261,7 +261,7 @@ cd flack</code><button class="copy" aria-label="Copy">Copy</button></pre>
     <footer class="footer">
       <div class="wrap footer-inner">
         <span class="brand small"><img src="assets/favicon.svg" alt="" width="20" height="20" /> Flack</span>
-        <span>MIT licensed · Built on Firebase · Not affiliated with Slack or Google</span>
+        <span>MIT licensed · Runs on Firebase · Not affiliated with or endorsed by Slack or Google. Firebase is a trademark of Google LLC; Slack is a trademark of Slack Technologies, LLC.</span>
       </div>
     </footer>
 

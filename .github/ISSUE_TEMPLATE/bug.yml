@@ -1,0 +1,29 @@
+name: Bug report
+description: Something doesn't work as it should
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Open a channel\n2. …"
+  - type: input
+    id: version
+    attributes:
+      label: Flack version
+      description: Shown at the bottom of the People & invites page (admins).
+  - type: input
+    id: device
+    attributes:
+      label: Device and browser
+      placeholder: e.g. iPhone 15 home-screen app, Chrome 140 on macOS
+  - type: markdown
+    attributes:
+      value: "Please don't include private messages, emails or project ids. Security problems go to [private reporting](https://github.com/mvergarair/flack/security/advisories/new) instead."

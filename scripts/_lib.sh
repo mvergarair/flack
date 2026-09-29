@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Shared by gcloud.sh / fb.sh / deploy.sh. Isolates every CLI from the user's global config.
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 FLACK_PROJECT="${FLACK_PROJECT:-}"

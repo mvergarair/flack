@@ -60,5 +60,5 @@ notificaciones como en una app nativa.
 
 <walkthrough-conclusion-trophy></walkthrough-conclusion-trophy>
 
-Para actualizar, descarga el código más reciente y corre `npm run deploy` (primero ejecuta
-todas las pruebas) o `scripts/deploy.sh` para desplegar de inmediato.
+Para actualizar, abre Cloud Shell y corre `cd flack && npm run update`. Tu configuración se
+mantiene, y los admins ven un aviso en la app cuando hay una versión nueva.
