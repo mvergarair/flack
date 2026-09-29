@@ -29,6 +29,6 @@
     "firebase-admin": "^14.5.0",
     "firebase-tools": "^15.31.0",
     "tsx": "^4.20.6",
-    "typescript": "~6.0.3"
+    "typescript": "~7.0.2"
   }
 }
