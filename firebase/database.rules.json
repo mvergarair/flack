@@ -1,0 +1,41 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "status": {
+      ".read": "auth != null && auth.token.active === true",
+      "$uid": {
+        ".write": "auth != null && auth.uid === $uid && auth.token.active === true",
+        "$device": {
+          ".validate": "$device.length <= 40 && newData.hasChildren(['state', 'lastChanged'])",
+          "state": {
+            ".validate": "newData.val() === 'online' || newData.val() === 'away' || newData.val() === 'offline'"
+          },
+          "lastChanged": {
+            ".validate": "newData.isNumber()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    },
+    "typing": {
+      "$key": {
+        ".read": "auth != null && auth.token.active === true && $key.matches(/^t_[A-Za-z0-9]{20,40}(:[A-Za-z0-9_-]{1,100})?$/)",
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid && auth.token.active === true && $key.matches(/^t_[A-Za-z0-9]{20,40}(:[A-Za-z0-9_-]{1,100})?$/)",
+          ".validate": "newData.isNumber()"
+        }
+      }
+    },
+    "viewing": {
+      "$uid": {
+        ".write": "auth != null && auth.uid === $uid && auth.token.active === true",
+        "$device": {
+          ".validate": "$device.length <= 40 && newData.isString() && newData.val().length <= 200"
+        }
+      }
+    }
+  }
+}

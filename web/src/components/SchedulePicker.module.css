@@ -1,0 +1,105 @@
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+}
+.panel {
+  position: absolute;
+  z-index: 61;
+  width: 280px;
+  max-width: calc(100vw - 32px);
+  padding: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+.above {
+  bottom: calc(100% + 6px);
+}
+.below {
+  top: calc(100% + 6px);
+}
+.right {
+  right: 0;
+}
+.left {
+  left: 0;
+}
+.title {
+  padding: 6px 8px 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.options {
+  display: flex;
+  flex-direction: column;
+}
+.options button {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  text-align: left;
+  padding: 9px 10px;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  min-height: 40px;
+}
+.options button:hover:not(:disabled) {
+  background: var(--surface-2);
+}
+.when {
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.custom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 8px 8px;
+}
+.custom label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.custom input,
+.custom select {
+  font: inherit;
+  font-weight: 400;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  min-height: 40px;
+}
+.row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.error {
+  margin: 6px 8px 4px;
+  color: var(--danger);
+  font-size: 13px;
+}
+@media (max-width: 767px) {
+  .panel {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    top: auto;
+    width: auto;
+    max-width: none;
+  }
+}

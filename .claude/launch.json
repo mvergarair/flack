@@ -1,0 +1,39 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "emulators",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "emulators"
+      ],
+      "port": 4300
+    },
+    {
+      "name": "web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "-w",
+        "web"
+      ],
+      "port": 5317
+    },
+    {
+      "name": "site",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "5320",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "site"
+      ],
+      "port": 5320
+    }
+  ]
+}

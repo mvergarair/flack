@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="es" data-assets="../assets/">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Flack · Chat de equipo en tu propio Firebase</title>
+    <meta name="description" content="Chat de equipo de código abierto (canales, hilos, mensajes directos, búsqueda, recordatorios y notificaciones) que se instala en tu propio proyecto de Firebase con un solo comando. Pagas solo lo que usas; los equipos pequeños suelen pagar $0." />
+    <meta property="og:title" content="Flack · Chat de equipo en tu propio Firebase" />
+    <meta property="og:description" content="Canales, hilos, mensajes directos, búsqueda, recordatorios y notificaciones. Tu proyecto, tus datos, un comando para instalar." />
+    <meta property="og:image" content="../assets/og.png" />
+    <meta property="og:locale" content="es_LA" />
+    <meta name="theme-color" content="#0f1a1d" />
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="alternate" hreflang="en" href="https://mvergarair.github.io/flack/" />
+    <link rel="alternate" hreflang="es" href="https://mvergarair.github.io/flack/es/" />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="wrap nav-inner">
+        <a class="brand" href="#top" aria-label="Flack, inicio">
+          <img src="../assets/favicon.svg" alt="" width="28" height="28" />
+          <span>Flack</span>
+        </a>
+        <nav aria-label="Secciones">
+          <a href="#features">Funciones</a>
+          <a href="#install">Instalar</a>
+          <a href="#cost">Costos</a>
+          <a href="#security">Seguridad</a>
+        </nav>
+        <span class="lang" aria-label="Idioma"><a href="../" hreflang="en" lang="en">EN</a><b aria-current="true">ES</b></span>
+        <a class="btn btn-ghost btn-sm" href="https://github.com/mvergarair/flack">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </header>
+
+    <main id="top">
+      <!-- Hero -->
+      <section class="hero">
+        <div class="glow glow-a" aria-hidden="true"></div>
+        <div class="glow glow-b" aria-hidden="true"></div>
+        <div class="wrap hero-inner">
+          <h1>El chat de tu equipo.<br /><span class="grad">En tu propio Firebase.</span></h1>
+          <p class="lede">
+            Canales, hilos, mensajes directos, búsqueda, recordatorios y notificaciones, instalados en
+            <em>tu</em> proyecto de Google Cloud con un solo comando. Pagas solo lo que usas, y un equipo
+            pequeño suele pagar <strong class="mint">$0</strong>.
+          </p>
+          <div class="cta">
+            <a
+              class="btn btn-primary"
+              href="https://shell.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fmvergarair%2Fflack&amp;cloudshell_tutorial=docs%2Fcloudshell-tutorial.es.md&amp;show=terminal"
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m5 8 4 4-4 4M12 16h7"/></svg>
+              Instalar en Cloud Shell
+            </a>
+            <a class="btn btn-ghost" href="#install">O en tu computador →</a>
+          </div>
+          <p class="fine">Gratis y de código abierto · Pensado para equipos de 10 a 100 personas, o más · Solo con invitación</p>
+
+          <div class="shots" aria-label="Capturas de Flack">
+            <figure class="frame desktop">
+              <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span>tu-equipo.web.app</span></div>
+              <picture>
+                <source srcset="../assets/channel-desktop-dark.png" media="(prefers-color-scheme: dark)" />
+                <img src="../assets/channel-desktop-light.png" alt="Un canal de Flack con mensajes, un hilo y la barra lateral" width="1440" height="900" />
+              </picture>
+            </figure>
+            <figure class="frame phone">
+              <picture>
+                <source srcset="../assets/channel-phone-dark.png" media="(prefers-color-scheme: dark)" />
+                <img src="../assets/channel-phone-light.png" alt="Flack en un teléfono" width="390" height="844" />
+              </picture>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- Funciones -->
+      <section id="features" class="section">
+        <div class="wrap">
+          <p class="kicker">Todo lo que un equipo usa de verdad</p>
+          <h2>Lo que extrañarías de Slack, <span class="grad">sin pagar por usuario.</span></h2>
+          <div class="grid features">
+            <article class="card">
+              <span class="icon">#</span>
+              <h3>Canales y mensajes directos</h3>
+              <p>Canales públicos y privados, mensajes 1:1 y grupales, contadores de no leídos, @menciones, @here y @channel.</p>
+            </article>
+            <article class="card">
+              <span class="icon">↳</span>
+              <h3>Hilos</h3>
+              <p>Responde en hilos, “enviar también al canal”, y mira quién está escribiendo, incluso dentro de un hilo.</p>
+            </article>
+            <article class="card">
+              <span class="icon">⌘K</span>
+              <h3>Busca todo</h3>
+              <p>Un atajo para canales, personas y mensajes. Filtra por persona, canal, fecha o archivos.</p>
+            </article>
+            <article class="card">
+              <span class="icon">⏰</span>
+              <h3>Recordatorios y envíos programados</h3>
+              <p><code>/remind me in 1h to…</code>, <code>/schedule tomorrow 9am…</code>, posponer y una bandeja “Later”.</p>
+            </article>
+            <article class="card">
+              <span class="icon">🔔</span>
+              <h3>Notificaciones de verdad</h3>
+              <p>Escritorio, Android y la app de inicio del iPhone. Niveles por canal y horarios de No molestar.</p>
+            </article>
+            <article class="card">
+              <span class="icon">🙂</span>
+              <h3>Reacciones, fijados, guardados</h3>
+              <p>Tus reacciones rápidas, mensajes fijados por canal, marcar como no leído y guardar para después.</p>
+            </article>
+            <article class="card">
+              <span class="icon">●</span>
+              <h3>Presencia y estado</h3>
+              <p>En línea, ausente por inactividad, última conexión, estado personalizado con vencimiento y hora local en cada perfil.</p>
+            </article>
+            <article class="card">
+              <span class="icon">📎</span>
+              <h3>Archivos y vistas previas</h3>
+              <p>Arrastra, suelta o pega archivos de hasta 50 MB. Los enlaces muestran título, descripción e imagen.</p>
+            </article>
+            <article class="card">
+              <span class="icon">🔑</span>
+              <h3>Solo con invitación</h3>
+              <p>Inicio de sesión con Google, pero solo para quien un admin invitó. Si desactivas a alguien, queda fuera al instante.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pantallas -->
+      <section class="section screens">
+        <div class="wrap">
+          <div class="tabs" role="tablist" aria-label="Pantallas">
+            <button role="tab" aria-selected="true" data-shot="thread" data-alt="Un hilo abierto junto a su canal">Hilos</button>
+            <button role="tab" aria-selected="false" data-shot="search" data-alt="Búsqueda de canales, personas y mensajes">Búsqueda</button>
+            <button role="tab" aria-selected="false" data-shot="activity" data-alt="Actividad: menciones, respuestas y recordatorios">Actividad</button>
+            <button role="tab" aria-selected="false" data-shot="admin" data-alt="Admin: invitaciones y personas">Admin</button>
+          </div>
+          <figure class="frame desktop wide">
+            <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span>tu-equipo.web.app</span></div>
+            <picture id="screen">
+              <source srcset="../assets/thread-desktop-dark.png" media="(prefers-color-scheme: dark)" />
+              <img src="../assets/thread-desktop-light.png" alt="Un hilo abierto junto a su canal" width="1440" height="900" loading="lazy" />
+            </picture>
+          </figure>
+          <p class="note">La app está en inglés por ahora.</p>
+        </div>
+      </section>
+
+      <!-- Instalar -->
+      <section id="install" class="section">
+        <div class="wrap">
+          <p class="kicker">Instalar</p>
+          <h2>De cero a tu propio chat <span class="grad">en unos 15 minutos.</span></h2>
+          <ol class="steps">
+            <li class="card">
+              <span class="num">1</span>
+              <h3>Obtén el código</h3>
+              <p>Haz clic en <strong>Instalar en Cloud Shell</strong> (no hay que instalar nada y ya tienes tu sesión iniciada), o clónalo:</p>
+              <pre><code>git clone https://github.com/mvergarair/flack
+cd flack</code><button class="copy" aria-label="Copiar" data-copied="Copiado">Copiar</button></pre>
+            </li>
+            <li class="card">
+              <span class="num">2</span>
+              <h3>Corre el instalador</h3>
+              <p>Te pide un id de proyecto, una región, tu email y un presupuesto; luego configura y despliega todo.</p>
+              <pre><code>npm run setup</code><button class="copy" aria-label="Copiar" data-copied="Copiado">Copiar</button></pre>
+            </li>
+            <li class="card">
+              <span class="num">3</span>
+              <h3>Un clic y a invitar</h3>
+              <p>Activa el inicio de sesión con Google en la consola de Firebase (el instalador te da el enlace), entra e invita a tu equipo desde <strong>Admin</strong>.</p>
+            </li>
+          </ol>
+          <p class="note">
+            El instalador crea el proyecto (o usa el tuyo), vincula la facturación, activa Firestore, Realtime Database,
+            Storage, Functions e Identity Platform, escribe la configuración, crea una alerta de presupuesto y despliega.
+            Puedes volver a correrlo sin problema.
+          </p>
+        </div>
+      </section>
+
+      <!-- Costos -->
+      <section id="cost" class="section cost">
+        <div class="wrap cost-inner">
+          <div>
+            <p class="kicker">Costos</p>
+            <h2>Pagas lo que usas, <span class="mint">pensado para $0.</span></h2>
+            <p>
+              Flack necesita el plan <strong>Blaze</strong> de Firebase: sin mensualidad, solo pagas el uso que supere las
+              cuotas gratuitas, que se renuevan cada día o cada mes. Flack está hecho para quedarse dentro de ellas: páginas
+              de 50 mensajes, caché sin conexión, presencia y “escribiendo…” en Realtime Database, y una búsqueda que no
+              cuesta nada cuando nadie la usa.
+            </p>
+            <p>
+              El instalador crea una <strong>alerta de presupuesto</strong> (US$5 al mes por defecto) que te avisa por email al
+              50%, 90% y 100%. Lo único que normalmente verás son unos centavos al mes por guardar las imágenes de las funciones.
+            </p>
+          </div>
+          <div class="card meters" aria-label="Uso típico de un equipo de 25 personas comparado con las cuotas gratuitas">
+            <h3>Un equipo activo de 25 personas, por día</h3>
+            <div class="meter"><span>Lecturas</span><b style="--v: 40%"></b><em>~20 mil de 50 mil gratis</em></div>
+            <div class="meter"><span>Escrituras</span><b style="--v: 15%"></b><em>~3 mil de 20 mil gratis</em></div>
+            <div class="meter"><span>Funciones</span><b style="--v: 5%"></b><em>~3 mil de 66 mil gratis</em></div>
+            <div class="meter"><span>Archivos</span><b style="--v: 20%"></b><em>~1 GB de 5 GB gratis</em></div>
+            <div class="meter"><span>Tiempo real</span><b style="--v: 10%"></b><em>~1 GB de 10 GB/mes gratis</em></div>
+            <p class="small">Estimaciones; el uso depende de cuánto converse tu equipo. Sobre las cuotas gratuitas pagas unos centavos por cada 100 mil operaciones de base de datos y unos US$0,02–0,03 por GB de archivos al mes.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Seguridad -->
+      <section id="security" class="section">
+        <div class="wrap">
+          <p class="kicker">Seguridad</p>
+          <h2>Tus datos se quedan <span class="grad">en tu proyecto.</span></h2>
+          <div class="grid security">
+            <div class="card"><h3>Sin intermediarios</h3><p>Todo vive en tu proyecto de Google Cloud. No hay un servidor de Flack ni terceros.</p></div>
+            <div class="card"><h3>Reglas en cada lectura</h3><p>Las reglas de Firestore, Storage y Realtime Database revisan la invitación, el rol y la membresía del canal en cada solicitud, con más de 100 pruebas automáticas.</p></div>
+            <div class="card"><h3>Sin enlaces públicos</h3><p>Los archivos se descargan a través del SDK con las reglas aplicadas. Nada tiene una URL pública adivinable.</p></div>
+            <div class="card"><h3>Solo con invitación</h3><p>Funciones de bloqueo rechazan cualquier cuenta de Google sin invitación, y quien es desactivado queda fuera al instante.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Preguntas -->
+      <section class="section faq">
+        <div class="wrap narrow">
+          <h2>Preguntas</h2>
+          <details><summary>¿Necesito una tarjeta de crédito?</summary><p>Necesitas una cuenta de facturación de Google Cloud (plan Blaze) porque Flack usa Cloud Functions. Con las cuotas gratuitas y la alerta de presupuesto, los equipos pequeños normalmente no pagan nada.</p></details>
+          <details><summary>¿Cuántas personas pueden usarlo?</summary><p>Está pensado para equipos de 10 a 100 personas, y funciona con equipos más grandes. Sobre unos cientos de personas, el backlog del repositorio explica cómo aligerar las conexiones siempre activas (presencia y directorio de miembros) para mantener los costos bajos.</p></details>
+          <details><summary>¿Puedo usar mi propio dominio?</summary><p>Sí. Agrega un dominio personalizado en Firebase Hosting y súmalo a los dominios autorizados para iniciar sesión.</p></details>
+          <details><summary>¿Es una app de verdad en el teléfono?</summary><p>Es una PWA instalable: agrégala a la pantalla de inicio en iPhone o instálala en Android para tener notificaciones y pantalla completa.</p></details>
+          <details><summary>¿La app está en español?</summary><p>Por ahora la interfaz está en inglés. Esta página y la guía de instalación están en español.</p></details>
+          <details><summary>¿Cómo la actualizo?</summary><p>Descarga el código más reciente y corre <code>npm run deploy</code>. Ejecuta las pruebas unitarias, de reglas y de punta a punta antes de desplegar.</p></details>
+        </div>
+      </section>
+
+      <section class="section final">
+        <div class="wrap final-inner">
+          <h2>El chat de tu equipo, en tus manos.</h2>
+          <div class="cta">
+            <a
+              class="btn btn-primary"
+              href="https://shell.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fmvergarair%2Fflack&amp;cloudshell_tutorial=docs%2Fcloudshell-tutorial.es.md&amp;show=terminal"
+              >Instalar en Cloud Shell</a
+            >
+            <a class="btn btn-ghost" href="https://github.com/mvergarair/flack">Dale una estrella en GitHub</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-inner">
+        <span class="brand small"><img src="../assets/favicon.svg" alt="" width="20" height="20" /> Flack</span>
+        <span>Licencia MIT · Hecho sobre Firebase · Sin relación con Slack ni Google</span>
+      </div>
+    </footer>
+
+    <script src="../site.js" defer></script>
+  </body>
+</html>

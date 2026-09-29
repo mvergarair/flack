@@ -1,0 +1,67 @@
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+.sub {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.alert {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 14px;
+  line-height: 1.45;
+}
+.fine {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.emu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.row {
+  display: flex;
+  gap: 8px;
+}
+.row > * {
+  flex: 1;
+}
+.inviteBox {
+  padding: 14px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 15px;
+  line-height: 1.5;
+}

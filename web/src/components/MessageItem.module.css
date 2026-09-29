@@ -1,0 +1,493 @@
+.row {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding: 8px 24px;
+}
+.compact {
+  padding-top: 1px;
+  padding-bottom: 2px;
+}
+.row:hover {
+  background: var(--surface-2);
+}
+.highlight {
+  background: var(--highlight);
+}
+.mentioned {
+  background: color-mix(in srgb, var(--mention-bg) 45%, transparent);
+  box-shadow: inset 3px 0 0 #e0a800;
+}
+.gutter {
+  width: 38px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+}
+.hoverTime {
+  visibility: hidden;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 24px;
+}
+.row:hover .hoverTime {
+  visibility: visible;
+}
+.body {
+  flex: 1;
+  min-width: 0;
+}
+.meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.author {
+  font-weight: 700;
+  font-size: 15px;
+  border: none;
+  background: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+}
+.author:hover {
+  text-decoration: underline;
+}
+.avatarBtn {
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  height: fit-content;
+  border-radius: 8px;
+}
+.text :global(.mention[data-uid]) {
+  cursor: pointer;
+}
+.tag {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--surface-3);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+.time {
+  font-size: 12px;
+  color: var(--muted);
+}
+.text {
+  font-size: 15px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.text :global(p) {
+  margin: 0;
+}
+.text :global(p + p),
+.text :global(p + ul),
+.text :global(p + ol),
+.text :global(ul + p),
+.text :global(ol + p),
+.text :global(pre + p),
+.text :global(p + pre),
+.text :global(blockquote + p) {
+  margin-top: 4px;
+}
+.text :global(ul),
+.text :global(ol) {
+  margin: 4px 0 0;
+  padding-left: 22px;
+}
+.text :global(blockquote) {
+  margin: 4px 0;
+  padding-left: 12px;
+  border-left: 3px solid var(--border-2);
+  color: var(--text-2);
+}
+.text :global(code) {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  color: var(--code-text);
+}
+.text :global(pre) {
+  margin: 6px 0 0;
+  max-width: 720px;
+  background: var(--pre-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  overflow-x: auto;
+}
+.text :global(pre code) {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre;
+}
+.text :global(a) {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.text :global(.mention) {
+  background: var(--mention-bg);
+  color: var(--mention-text);
+  border-radius: 4px;
+  padding: 0 3px;
+  font-weight: 500;
+}
+.text :global(.mention[data-me='true']) {
+  background: var(--mention-me-bg);
+}
+.text :global(table) {
+  border-collapse: collapse;
+  margin-top: 6px;
+  font-size: 14px;
+}
+.text :global(th),
+.text :global(td) {
+  border: 1px solid var(--border-2);
+  padding: 4px 8px;
+}
+.edited {
+  font-size: 12px;
+  color: var(--muted);
+}
+.deleted {
+  margin: 0;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--muted);
+}
+.sending {
+  font-size: 12px;
+  color: var(--muted);
+}
+.thread {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 3px 8px 3px 4px;
+  margin-left: -4px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  font-size: 13px;
+}
+.thread:hover {
+  background: var(--surface);
+  border-color: var(--border-2);
+}
+.threadAvatars {
+  display: flex;
+  gap: 3px;
+}
+.threadCount {
+  font-weight: 600;
+  color: var(--accent);
+}
+.threadWhen {
+  color: var(--muted);
+}
+.actions {
+  position: absolute;
+  top: -14px;
+  right: 20px;
+  display: none;
+  gap: 2px;
+  padding: 2px;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.row:hover .actions,
+.row:focus-within .actions {
+  display: flex;
+}
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+.editArea {
+  width: 100%;
+  border: 1px solid var(--border-input);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 15px;
+  line-height: 1.5;
+  resize: vertical;
+  background: var(--surface);
+}
+.editActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.editActions :global(.field-hint) {
+  margin-right: auto;
+}
+.confirm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--danger-soft);
+  font-size: 14px;
+}
+.confirm span {
+  margin-right: auto;
+}
+
+@media (max-width: 899px) {
+  .row {
+    padding: 8px 16px;
+    gap: 10px;
+  }
+  .compact {
+    padding-top: 1px;
+    padding-bottom: 2px;
+  }
+  .gutter {
+    width: 34px;
+  }
+  .row:hover {
+    background: none;
+  }
+  .actions {
+    right: 12px;
+  }
+  .text :global(pre) {
+    font-size: 12px;
+  }
+}
+@media (hover: none) {
+  .row:hover .actions,
+  .row:focus-within .actions {
+    display: none;
+  }
+  .showActions .actions,
+  .showActions:hover .actions {
+    display: flex;
+  }
+  .showActions {
+    background: var(--surface-2);
+  }
+}
+
+/* ---------- reactions, pins, overflow menu ---------- */
+.pinned {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+.reactions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+  align-items: center;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 13px;
+  border: 1px solid var(--border-2);
+  background: var(--surface-2);
+  font-size: 14px;
+  cursor: pointer;
+}
+.chip:hover {
+  border-color: var(--border-input);
+}
+.chipMine {
+  border-color: var(--accent-soft-border);
+  background: var(--accent-soft);
+}
+.chipCount {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+.chipMine .chipCount {
+  color: var(--accent);
+}
+.addWrap {
+  position: relative;
+}
+.chipAdd {
+  height: 26px;
+  width: 30px;
+  border-radius: 13px;
+  border: 1px solid transparent;
+  background: none;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.row:hover .chipAdd {
+  border-color: var(--border-2);
+}
+.quick {
+  font-size: 17px;
+  line-height: 1;
+}
+.actionsOpen {
+  display: flex;
+}
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+.menu {
+  position: absolute;
+  z-index: 41;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 190px;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+}
+.menu button {
+  text-align: left;
+  padding: 9px 10px;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  min-height: 38px;
+}
+.menu button:hover {
+  background: var(--surface-2);
+}
+.pickerAnchor {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 45;
+}
+.repliedTo {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 2px;
+}
+.repliedTo:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* ---------- link previews ---------- */
+.previews {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  max-width: 560px;
+}
+.preview {
+  display: flex;
+  gap: 12px;
+  padding: 10px 12px;
+  border-left: 4px solid var(--border-2);
+  background: var(--surface-2);
+  border-radius: 0 8px 8px 0;
+}
+.previewText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.previewSite {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.previewTitle {
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+}
+.previewTitle:hover {
+  text-decoration: underline;
+}
+.previewDesc {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.previewImg {
+  width: 96px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+  background: var(--surface-3);
+}
+.previewRemove {
+  position: absolute;
+  top: 4px;
+  right: -28px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0;
+}
+.row:hover .previewRemove,
+.previewRemove:focus-visible {
+  opacity: 1;
+}
+@media (hover: none) {
+  .previewRemove {
+    opacity: 1;
+    right: 4px;
+  }
+}
+.remindAnchor {
+  position: absolute;
+  top: 28px;
+  right: 20px;
+  z-index: 45;
+}

@@ -1,0 +1,75 @@
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+.tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border: none;
+  background: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-2);
+  cursor: pointer;
+  min-height: 42px;
+  white-space: nowrap;
+}
+.tabs button.active {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+.count {
+  font-size: 12px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--surface-3);
+  color: var(--text-2);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.failed {
+  color: var(--danger);
+  font-size: 13px;
+}
+.edit {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+.edit textarea {
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-input);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  resize: vertical;
+}
+.editRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+@media (max-width: 767px) {
+  .tabs {
+    padding: 0 8px;
+  }
+  .actions {
+    max-width: 44%;
+  }
+}

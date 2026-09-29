@@ -1,0 +1,55 @@
+.picker {
+  position: absolute;
+  z-index: 50;
+  width: 292px;
+  padding: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.right {
+  right: 0;
+}
+.left {
+  left: 0;
+}
+.below {
+  top: calc(100% + 6px);
+}
+.above {
+  bottom: calc(100% + 6px);
+}
+.search {
+  height: 34px;
+  font-size: 14px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 2px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.emoji {
+  height: 32px;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+.emoji:hover,
+.emoji:focus-visible {
+  background: var(--surface-3);
+}
+.empty {
+  grid-column: 1 / -1;
+  padding: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}

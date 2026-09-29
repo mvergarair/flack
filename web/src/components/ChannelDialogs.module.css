@@ -1,0 +1,74 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.nameInput {
+  position: relative;
+}
+.nameInput span {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+}
+.nameInput input {
+  padding-left: 26px;
+}
+.toggle {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 14px;
+  cursor: pointer;
+}
+.toggle input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+}
+.toggle > span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.browse {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.browse li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.browse li:last-child {
+  border-bottom: none;
+}
+.browseIcon {
+  color: var(--muted);
+  display: inline-flex;
+}
+.browseText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 15px;
+}
+.browseText span {
+  color: var(--muted);
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.empty {
+  color: var(--muted);
+  justify-content: center;
+}

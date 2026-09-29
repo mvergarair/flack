@@ -1,0 +1,53 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.emojiWrap {
+  position: relative;
+}
+.emojiBtn {
+  width: 44px;
+  height: 40px;
+  padding: 0;
+  font-size: 20px;
+}
+.textField {
+  flex: 1;
+}
+.presets {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.preset {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: none;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  min-height: 42px;
+}
+.preset:last-child {
+  border-bottom: none;
+}
+.preset:hover {
+  background: var(--surface-2);
+}
+.presetClear {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 12px;
+}

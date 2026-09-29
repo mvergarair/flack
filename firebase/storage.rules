@@ -1,0 +1,40 @@
+rules_version = '2';
+
+// Attachments live at channels/{channelId}/{messageId}/{fileName} and are only reachable
+// through the SDK (no public download URLs), so these rules always apply.
+service firebase.storage {
+  match /b/{bucket}/o {
+    function active() {
+      return request.auth != null
+        && request.auth.token.active == true
+        && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.status == 'active';
+    }
+    function member(channelId) {
+      return request.auth.uid in firestore.get(/databases/(default)/documents/channels/$(channelId)).data.memberIds;
+    }
+    function blockedType(contentType, fileName) {
+      return contentType.matches('application/(x-msdownload|x-msdos-program|x-ms-installer|x-msi|vnd\\.microsoft\\.portable-executable|x-executable|x-sh|x-bat|x-dosexec)')
+        || fileName.lower().matches('.*\\.(exe|msi|bat|cmd|com|scr|ps1|vbs|dll|cpl|jar|app|sh)$');
+    }
+
+    match /channels/{channelId}/{messageId}/{fileName} {
+      allow read: if active() && member(channelId);
+      // Overwrites are "update" (denied below) in production; the emulator doesn't make
+      // that distinction, so this is not covered by the local rules tests.
+      allow create: if active()
+        && member(channelId)
+        && request.resource.size <= 50 * 1024 * 1024
+        && request.resource.metadata.uploaderId == request.auth.uid
+        && fileName.size() <= 200
+        && !blockedType(request.resource.contentType, fileName);
+      allow update: if false;
+      allow delete: if active()
+        && member(channelId)
+        && resource.metadata.uploaderId == request.auth.uid;
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,110 @@
+.wrap {
+  position: relative;
+}
+.sidebar {
+  border-top: 1px solid var(--side-raised);
+}
+.me {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+.mobile .me {
+  padding: 0;
+  width: auto;
+}
+.sidebar .me:hover {
+  background: var(--side-hover);
+}
+.meText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.meName {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.meSub {
+  font-size: 12px;
+  color: var(--side-muted);
+}
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+.menu {
+  position: absolute;
+  z-index: 41;
+  min-width: 240px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar .menu {
+  left: 12px;
+  bottom: calc(100% + 4px);
+}
+.mobile .menu {
+  right: 0;
+  top: calc(100% + 8px);
+}
+.menuHead {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+.menuHead span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.menu button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+  min-height: 40px;
+}
+.menu button:hover {
+  background: var(--surface-2);
+}
+.statusIcon {
+  width: 16px;
+  text-align: center;
+}
+.awayDot {
+  width: 10px;
+  height: 10px;
+  margin: 0 3px;
+  border-radius: 50%;
+  background: var(--online);
+}
+.awayDot[data-away='false'] {
+  background: var(--away);
+}

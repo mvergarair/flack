@@ -1,0 +1,27 @@
+.avatar {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 600;
+  line-height: 1;
+  user-select: none;
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.dot {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  border-radius: 50%;
+  border: 2px solid;
+  box-sizing: border-box;
+}
+.dot[data-online='false'] {
+  box-shadow: inset 0 0 0 1.5px var(--side-muted);
+}

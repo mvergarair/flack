@@ -1,0 +1,323 @@
+:root {
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f6f8f9;
+  --surface-3: #eef1f3;
+  --text: #1b2226;
+  --text-2: #3e474d;
+  --muted: #59636a;
+  --border: #e2e6e8;
+  --border-2: #d5dadd;
+  --border-input: #b9c1c6;
+
+  --accent: #1f5fc4;
+  --accent-hover: #174a99;
+  --accent-soft: #e8f0fc;
+  --accent-soft-border: #b9cff3;
+  --on-accent: #ffffff;
+
+  --danger: #b3261e;
+  --danger-soft: #fbe9e7;
+  --success: #1d7a4e;
+  --badge: #d8412f;
+  --online: #3fb27f;
+  --away: #e0a800;
+
+  --code-bg: #edeff1;
+  --code-border: #dde2e5;
+  --code-text: #a23b15;
+  --pre-bg: #f2f4f5;
+  --mention-bg: #fff1cc;
+  --mention-text: #6e4500;
+  --mention-me-bg: #ffe08a;
+  --highlight: #fff8e1;
+
+  --side-bg: #1e2b2f;
+  --side-text: #c9d3d6;
+  --side-muted: #93a3a8;
+  --side-hash: #7e9096;
+  --side-raised: #2e3d42;
+  --side-hover: #26363b;
+  --side-active: #2f6fd6;
+  --side-strong: #ffffff;
+
+  --shadow: 0 8px 28px rgba(20, 32, 40, 0.18);
+  --radius: 8px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15191c;
+    --surface: #1b2024;
+    --surface-2: #20262a;
+    --surface-3: #293035;
+    --text: #e3e8ea;
+    --text-2: #c3cbcf;
+    --muted: #9aa6ac;
+    --border: #2c3438;
+    --border-2: #374146;
+    --border-input: #4a565c;
+
+    --accent: #5b93e8;
+    --accent-hover: #7aa8ee;
+    --accent-soft: #1d2d45;
+    --accent-soft-border: #2f4a73;
+    --on-accent: #0d1420;
+
+    --danger: #f08a80;
+    --danger-soft: #3a1f1d;
+    --success: #5cc494;
+    --badge: #e5533f;
+
+    --code-bg: #262d32;
+    --code-border: #343d42;
+    --code-text: #f0a37e;
+    --pre-bg: #20262a;
+    --mention-bg: #4a3a12;
+    --mention-text: #ffd97a;
+    --mention-me-bg: #6b5210;
+    --highlight: #2c2a1c;
+
+    --side-bg: #11191c;
+    --side-raised: #1f2c30;
+    --side-hover: #1a2629;
+    --shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
+  }
+  :root .btn-primary { color: #0d1420; }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+#root {
+  height: 100dvh;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--accent);
+}
+a:hover {
+  color: var(--accent-hover);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- shared controls ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-2);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn:hover {
+  background: var(--surface-2);
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+.btn-primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+.btn-danger {
+  color: var(--danger);
+}
+.btn-ghost {
+  border-color: transparent;
+  background: none;
+}
+.btn-lg {
+  height: 44px;
+  font-size: 15px;
+  padding: 0 18px;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  color: var(--text-2);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.icon-btn:hover {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.input {
+  height: 38px;
+  width: 100%;
+  padding: 0 12px;
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-size: 15px;
+}
+.input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.field-hint {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.error-text {
+  color: var(--danger);
+  font-size: 14px;
+}
+
+.badge {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 10px;
+  background: var(--badge);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 11px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--surface-3);
+  color: var(--text-2);
+}
+.pill-accent {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.pill-danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.center-page {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: var(--surface-2);
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* iOS zooms into inputs smaller than 16px; keep form text at 16px on phones. */
+@media (max-width: 899px) {
+  .input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}

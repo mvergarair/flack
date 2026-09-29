@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Flack · Team chat on your own Firebase</title>
+    <meta name="description" content="Open-source team chat (channels, threads, DMs, search, reminders, push) that deploys to your own Firebase project in one command. Pay-as-you-go; small teams usually pay $0." />
+    <meta property="og:title" content="Flack · Team chat on your own Firebase" />
+    <meta property="og:description" content="Channels, threads, DMs, search, reminders and push notifications. Your project, your data, one command to install." />
+    <meta property="og:image" content="assets/og.png" />
+    <meta name="theme-color" content="#0f1a1d" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="alternate" hreflang="en" href="https://mvergarair.github.io/flack/" />
+    <link rel="alternate" hreflang="es" href="https://mvergarair.github.io/flack/es/" />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="wrap nav-inner">
+        <a class="brand" href="#top" aria-label="Flack home">
+          <img src="assets/favicon.svg" alt="" width="28" height="28" />
+          <span>Flack</span>
+        </a>
+        <nav aria-label="Sections">
+          <a href="#features">Features</a>
+          <a href="#install">Install</a>
+          <a href="#cost">Cost</a>
+          <a href="#security">Security</a>
+        </nav>
+        <span class="lang" aria-label="Language"><b aria-current="true">EN</b><a href="es/" hreflang="es" lang="es">ES</a></span>
+        <a class="btn btn-ghost btn-sm" href="https://github.com/mvergarair/flack">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </header>
+
+    <main id="top">
+      <!-- Hero -->
+      <section class="hero">
+        <div class="glow glow-a" aria-hidden="true"></div>
+        <div class="glow glow-b" aria-hidden="true"></div>
+        <div class="wrap hero-inner">
+          <h1>Team chat you own.<br /><span class="grad">On your own Firebase.</span></h1>
+          <p class="lede">
+            Channels, threads, DMs, search, reminders and push notifications, deployed to
+            <em>your</em> Google Cloud project with one command. Pay-as-you-go, and a small team
+            usually pays <strong class="mint">$0</strong>.
+          </p>
+          <div class="cta">
+            <a
+              class="btn btn-primary"
+              href="https://shell.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fmvergarair%2Fflack&amp;cloudshell_tutorial=docs%2Fcloudshell-tutorial.md&amp;show=terminal"
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m5 8 4 4-4 4M12 16h7"/></svg>
+              Install in Cloud Shell
+            </a>
+            <a class="btn btn-ghost" href="#install">Or run it locally →</a>
+          </div>
+          <p class="fine">Free &amp; open source · Built for teams of 10–100 people, or more · Invite-only</p>
+
+          <div class="shots" aria-label="Flack screenshots">
+            <figure class="frame desktop">
+              <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span>your-team.web.app</span></div>
+              <picture>
+                <source srcset="assets/channel-desktop-dark.png" media="(prefers-color-scheme: dark)" />
+                <img src="assets/channel-desktop-light.png" alt="A Flack channel with messages, a thread and the sidebar" width="1440" height="900" />
+              </picture>
+            </figure>
+            <figure class="frame phone">
+              <picture>
+                <source srcset="assets/channel-phone-dark.png" media="(prefers-color-scheme: dark)" />
+                <img src="assets/channel-phone-light.png" alt="Flack on a phone" width="390" height="844" />
+              </picture>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features -->
+      <section id="features" class="section">
+        <div class="wrap">
+          <p class="kicker">Everything a team actually uses</p>
+          <h2>The Slack features you'd miss, <span class="grad">none of the seat fees.</span></h2>
+          <div class="grid features">
+            <article class="card">
+              <span class="icon">#</span>
+              <h3>Channels &amp; DMs</h3>
+              <p>Public and private channels, 1:1 and group DMs, unread badges, @mentions, @here and @channel.</p>
+            </article>
+            <article class="card">
+              <span class="icon">↳</span>
+              <h3>Threads</h3>
+              <p>Reply in threads, “also send to channel”, and see who's typing, even inside a thread.</p>
+            </article>
+            <article class="card">
+              <span class="icon">⌘K</span>
+              <h3>Search everything</h3>
+              <p>One shortcut for channels, people and messages. Filter by person, channel, date or files.</p>
+            </article>
+            <article class="card">
+              <span class="icon">⏰</span>
+              <h3>Reminders &amp; scheduling</h3>
+              <p><code>/remind me in 1h to…</code>, <code>/schedule tomorrow 9am…</code>, snooze, and a Later inbox.</p>
+            </article>
+            <article class="card">
+              <span class="icon">🔔</span>
+              <h3>Real push notifications</h3>
+              <p>Desktop, Android and iPhone home-screen app. Per-channel levels and Do Not Disturb schedules.</p>
+            </article>
+            <article class="card">
+              <span class="icon">🙂</span>
+              <h3>Reactions, pins, saves</h3>
+              <p>Your own quick reactions, pinned messages per channel, mark unread and save for later.</p>
+            </article>
+            <article class="card">
+              <span class="icon">●</span>
+              <h3>Presence &amp; status</h3>
+              <p>Online, away when idle, last seen, custom status with expiry, local time on every profile.</p>
+            </article>
+            <article class="card">
+              <span class="icon">📎</span>
+              <h3>Files &amp; link previews</h3>
+              <p>Drag, drop or paste files up to 50 MB. Links unfurl with title, description and image.</p>
+            </article>
+            <article class="card">
+              <span class="icon">🔑</span>
+              <h3>Invite-only</h3>
+              <p>Google sign-in, but only for people an admin invited. Deactivate someone and they're out instantly.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Screens -->
+      <section class="section screens">
+        <div class="wrap">
+          <div class="tabs" role="tablist" aria-label="Screens">
+            <button role="tab" aria-selected="true" data-shot="thread" data-alt="A thread open next to its channel">Threads</button>
+            <button role="tab" aria-selected="false" data-shot="search" data-alt="Search across channels, people and messages">Search</button>
+            <button role="tab" aria-selected="false" data-shot="activity" data-alt="Activity: mentions, replies and reminders">Activity</button>
+            <button role="tab" aria-selected="false" data-shot="admin" data-alt="Admin: invites and people">Admin</button>
+          </div>
+          <figure class="frame desktop wide">
+            <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span>your-team.web.app</span></div>
+            <picture id="screen">
+              <source srcset="assets/thread-desktop-dark.png" media="(prefers-color-scheme: dark)" />
+              <img src="assets/thread-desktop-light.png" alt="A thread open next to its channel" width="1440" height="900" loading="lazy" />
+            </picture>
+          </figure>
+        </div>
+      </section>
+
+      <!-- Install -->
+      <section id="install" class="section">
+        <div class="wrap">
+          <p class="kicker">Install</p>
+          <h2>From zero to your own chat <span class="grad">in about 15 minutes.</span></h2>
+          <ol class="steps">
+            <li class="card">
+              <span class="num">1</span>
+              <h3>Get the code</h3>
+              <p>Click <strong>Install in Cloud Shell</strong> (nothing to install, you're already signed in), or clone it:</p>
+              <pre><code>git clone https://github.com/mvergarair/flack
+cd flack</code><button class="copy" aria-label="Copy">Copy</button></pre>
+            </li>
+            <li class="card">
+              <span class="num">2</span>
+              <h3>Run the installer</h3>
+              <p>It asks for a project id, region, your email and a budget, then sets up and deploys everything.</p>
+              <pre><code>npm run setup</code><button class="copy" aria-label="Copy">Copy</button></pre>
+            </li>
+            <li class="card">
+              <span class="num">3</span>
+              <h3>One click, then invite</h3>
+              <p>Enable Google sign-in in the Firebase console (the installer prints the link), sign in, and invite your team from <strong>Admin</strong>.</p>
+            </li>
+          </ol>
+          <p class="note">
+            The installer creates the project (or uses yours), links billing, turns on Firestore, Realtime Database,
+            Storage, Functions and Identity Platform, writes the config, sets a budget alert and deploys. Safe to re-run.
+          </p>
+        </div>
+      </section>
+
+      <!-- Cost -->
+      <section id="cost" class="section cost">
+        <div class="wrap cost-inner">
+          <div>
+            <p class="kicker">Cost</p>
+            <h2>Pay-as-you-go, <span class="mint">sized for $0.</span></h2>
+            <p>
+              Flack needs Firebase's <strong>Blaze</strong> plan: no monthly fee, you pay only for usage beyond
+              the free quotas, which reset every day or month. Flack is built to stay inside them: 50-message pages,
+              an offline cache, presence and typing in the Realtime Database, and search that scales to zero.
+            </p>
+            <p>
+              The installer sets a <strong>budget alert</strong> (US$5/month by default) that emails you at 50%, 90%
+              and 100%. The one line item you'll usually see is a few cents a month for storing function images.
+            </p>
+          </div>
+          <div class="card meters" aria-label="Typical usage for a 25-person team versus free quotas">
+            <h3>A busy 25-person team, per day</h3>
+            <div class="meter"><span>Database reads</span><b style="--v: 40%"></b><em>~20k of 50k free</em></div>
+            <div class="meter"><span>Database writes</span><b style="--v: 15%"></b><em>~3k of 20k free</em></div>
+            <div class="meter"><span>Function runs</span><b style="--v: 5%"></b><em>~3k of 66k free</em></div>
+            <div class="meter"><span>Stored files</span><b style="--v: 20%"></b><em>~1 GB of 5 GB free</em></div>
+            <div class="meter"><span>Realtime traffic</span><b style="--v: 10%"></b><em>~1 GB of 10 GB/mo free</em></div>
+            <p class="small">Estimates; usage varies with how chatty your team is. Beyond the free quotas you pay a few cents per 100k database operations and about $0.02–0.03 per GB of files per month.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Security -->
+      <section id="security" class="section">
+        <div class="wrap">
+          <p class="kicker">Security</p>
+          <h2>Your data stays <span class="grad">in your project.</span></h2>
+          <div class="grid security">
+            <div class="card"><h3>No middleman</h3><p>Everything lives in your Google Cloud project. There's no Flack server and no third party.</p></div>
+            <div class="card"><h3>Rules on every read</h3><p>Firestore, Storage and Realtime Database rules check the invite, the role and channel membership on every request, with 100+ automated tests.</p></div>
+            <div class="card"><h3>No public file links</h3><p>Files download through the SDK with the rules applied. Nothing has a guessable public URL.</p></div>
+            <div class="card"><h3>Invite-only sign-in</h3><p>Blocking functions refuse any Google account that wasn't invited, and deactivated people are locked out immediately.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="section faq">
+        <div class="wrap narrow">
+          <h2>Questions</h2>
+          <details><summary>Do I need a credit card?</summary><p>You need a Google Cloud billing account (Blaze plan) because Flack uses Cloud Functions. With the free quotas and the budget alert, small teams typically pay nothing.</p></details>
+          <details><summary>How many people can use it?</summary><p>It's built for teams of 10–100 people, and larger teams work too. Past a few hundred people, the repo's backlog describes how to trim the always-on listeners (presence and the member directory) to keep costs flat.</p></details>
+          <details><summary>Can I use my own domain?</summary><p>Yes. Add a custom domain in Firebase Hosting and add it to the authorized domains for sign-in.</p></details>
+          <details><summary>Is it a real app on phones?</summary><p>It's an installable PWA: add it to the home screen on iPhone or install it on Android for push notifications and a full-screen app.</p></details>
+          <details><summary>How do I update?</summary><p>Pull the latest code and run <code>npm run deploy</code>. It runs the unit, rules and end-to-end tests before deploying.</p></details>
+        </div>
+      </section>
+
+      <section class="section final">
+        <div class="wrap final-inner">
+          <h2>Own your team's chat.</h2>
+          <div class="cta">
+            <a
+              class="btn btn-primary"
+              href="https://shell.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fmvergarair%2Fflack&amp;cloudshell_tutorial=docs%2Fcloudshell-tutorial.md&amp;show=terminal"
+              >Install in Cloud Shell</a
+            >
+            <a class="btn btn-ghost" href="https://github.com/mvergarair/flack">Star on GitHub</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-inner">
+        <span class="brand small"><img src="assets/favicon.svg" alt="" width="20" height="20" /> Flack</span>
+        <span>MIT licensed · Built on Firebase · Not affiliated with Slack or Google</span>
+      </div>
+    </footer>
+
+    <script src="site.js" defer></script>
+  </body>
+</html>
