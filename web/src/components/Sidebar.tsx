@@ -12,6 +12,8 @@ import { NotificationPrompt } from './NotificationPrompt';
 import { StatusEmoji } from './StatusEmoji';
 import { ChannelDialogs, type ChannelDialog } from './ChannelDialogs';
 import { ComposeIcon, HashIcon, LockIcon, PlusIcon, ShieldIcon, BellIcon, BellOffIcon, BookmarkIcon, SearchIcon } from './icons';
+import { useBranding } from '../data/branding';
+import { BrandLogo } from './BrandLogo';
 import styles from './Sidebar.module.css';
 
 export function Sidebar() {
@@ -22,13 +24,17 @@ export function Sidebar() {
   const counts = useMentionCounts();
   const unseenActivity = useUnseenActivity(useActivity());
 
+  const { name, branding } = useBranding();
   const rooms = useMemo(() => sortChannels(channels.filter((c) => c.type !== 'dm' && !c.archived)), [channels]);
   const dms = useMemo(() => sortByRecent(channels.filter((c) => c.type === 'dm')), [channels]);
 
   return (
     <nav className={styles.sidebar} aria-label="Workspace">
       <div className={styles.head}>
-        <span className={styles.workspace}>Flack</span>
+        <span className={styles.workspace} data-testid="workspace-name">
+          {branding.logo && <BrandLogo size={24} />}
+          <span>{name}</span>
+        </span>
         <button className={styles.headBtn} aria-label="New message" title="New message" onClick={() => setDialog({ kind: 'dm' })}>
           <ComposeIcon />
         </button>

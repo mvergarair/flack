@@ -18,9 +18,18 @@
   border-bottom: 1px solid var(--side-raised);
 }
 .workspace {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
   color: var(--side-strong);
   font-size: 17px;
   font-weight: 700;
+}
+.workspace > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .headBtn {
   width: 36px;

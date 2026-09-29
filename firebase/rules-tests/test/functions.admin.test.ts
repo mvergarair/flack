@@ -115,6 +115,32 @@ describe('admin callables', () => {
   });
 });
 
+describe('workspace settings', () => {
+  it('sets default channels (admins only, existing public channels only)', async () => {
+    cli('set', 'channels/pub2', JSON.stringify({ name: 'pub2', type: 'public', memberIds: ['uAdmin'], createdBy: 'uAdmin', archived: false }));
+    expect((await call(MEMBER, 'setdefaultchannels', { channelIds: ['general'] })).error?.status).toBe('PERMISSION_DENIED');
+    expect((await call(ADMIN, 'setdefaultchannels', { channelIds: ['nope'] })).error?.status).toBe('INVALID_ARGUMENT');
+    expect((await call(ADMIN, 'setdefaultchannels', { channelIds: Array(11).fill('general') })).error?.status).toBe('INVALID_ARGUMENT');
+    expect((await call(ADMIN, 'setdefaultchannels', { channelIds: ['pub2'] })).result).toEqual({ ok: true });
+    expect(getDoc<{ defaultChannelIds: string[] }>('config/app').defaultChannelIds).toEqual(['pub2']);
+  });
+
+  it('sign-up skips default channels that no longer exist or are archived', async () => {
+    cli('set', 'channels/pub2', JSON.stringify({ name: 'pub2', type: 'public', memberIds: ['uAdmin'], createdBy: 'uAdmin', archived: false }));
+    cli('set', 'channels/old', JSON.stringify({ name: 'old', type: 'public', memberIds: ['uAdmin'], createdBy: 'uAdmin', archived: true }));
+    cli('set', 'config/app', JSON.stringify({ defaultChannelIds: ['pub2', 'deleted-channel', 'old'] }));
+    const r = await fetchRetry(`${AUTH}/identitytoolkit.googleapis.com/v1/accounts:signUp?key=demo-key`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'invitee@flack.test', password: 'password123', returnSecureToken: true }),
+    });
+    const body = (await r.json()) as { localId?: string; error?: { message: string } };
+    expect(body.error).toBeUndefined();
+    expect(getDoc<{ memberIds: string[] }>('channels/pub2').memberIds).toContain(body.localId);
+    expect(getDoc<{ memberIds: string[] }>('channels/old').memberIds).not.toContain(body.localId);
+  });
+});
+
 /** fetch that retries once when a pooled keep-alive socket was already closed by the emulator. */
 async function fetchRetry(url: string, init?: RequestInit): Promise<Response> {
   try {

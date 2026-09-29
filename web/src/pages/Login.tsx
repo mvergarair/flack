@@ -5,11 +5,15 @@ import { signInWithGoogle } from '../auth/signin';
 import { friendlyAuthError } from '../lib/errors';
 import { USE_EMULATORS } from '../firebase';
 import { EmulatorLogin } from './EmulatorLogin';
-import { Logo, GoogleIcon } from '../components/icons';
+import { GoogleIcon } from '../components/icons';
+import { BrandLogo } from '../components/BrandLogo';
+import { useBranding, usePageTitle } from '../data/branding';
 import styles from './Login.module.css';
 
 export function LoginPage() {
   const { user, profile, endedReason } = useAuth();
+  const { name, tagline } = useBranding();
+  usePageTitle('Sign in');
   const [params] = useSearchParams();
   const next = safeNext(params.get('next'));
   const [error, setError] = useState<string | null>(null);
@@ -33,12 +37,14 @@ export function LoginPage() {
     <div className="center-page">
       <main className="card" aria-labelledby="login-title">
         <div className={styles.brand}>
-          <Logo size={40} />
+          <BrandLogo size={40} />
           <div>
             <h1 id="login-title" className={styles.title}>
-              Sign in to Flack
+              Sign in to {name}
             </h1>
-            <p className={styles.sub}>Invite-only team chat</p>
+            <p className={styles.sub} data-testid="login-tagline">
+              {tagline}
+            </p>
           </div>
         </div>
         {(error || endedReason) && (

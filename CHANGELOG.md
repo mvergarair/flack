@@ -7,6 +7,19 @@ a major version means you need to do something when updating, and the notes say 
 Shell: `cd flack && npm run update`). Your settings are kept. Admins also see an "update
 available" note on the People & invites page when a new release is out.
 
+## 1.4.0 (2026-09-29)
+
+- **Customize your workspace.** Admins: **People & invites → Customize workspace** to set
+  - the workspace **name** (replaces "Flack" in the sidebar, sign-in and invite pages, and tab titles),
+  - a **logo** (sidebar, sign-in page, browser tab icon),
+  - the **accent** and **sidebar colors** (8 presets or any hex; text colors adjust automatically
+    for contrast, in light and dark mode),
+  - the **sign-in message**, and
+  - which public channels **new members join**.
+
+  A live preview shows the result before saving.
+- Sign-up no longer fails if a default channel was deleted or archived; it's skipped.
+
 ## 1.3.0 (2026-09-29)
 
 - **API reference on your own domain.** `https://<project>.web.app/api/docs` is an interactive

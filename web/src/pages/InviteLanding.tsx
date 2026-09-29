@@ -6,7 +6,9 @@ import { useAuth } from '../auth/AuthProvider';
 import { signInWithGoogle } from '../auth/signin';
 import { friendlyAuthError } from '../lib/errors';
 import { EmulatorLogin } from './EmulatorLogin';
-import { GoogleIcon, Logo } from '../components/icons';
+import { GoogleIcon } from '../components/icons';
+import { BrandLogo } from '../components/BrandLogo';
+import { useBranding, usePageTitle } from '../data/branding';
 import styles from './Login.module.css';
 
 type Lookup =
@@ -22,6 +24,8 @@ type Lookup =
 const lookupInvite = httpsCallable<{ token: string }, Lookup>(functions, 'lookupinvite');
 
 export function InviteLandingPage() {
+  const { name } = useBranding();
+  usePageTitle('Invitation');
   const { token = '' } = useParams();
   const { user, profile } = useAuth();
   const [invite, setInvite] = useState<Lookup | null>(null);
@@ -42,7 +46,7 @@ export function InviteLandingPage() {
     body = (
       <>
         <p className={styles.inviteBox} data-testid="invite-summary">
-          <strong>{invite.invitedByName}</strong> invited <strong>{invite.email}</strong> to join Flack
+          <strong>{invite.invitedByName}</strong> invited <strong>{invite.email}</strong> to join {name}
           {invite.role === 'admin' ? ' as an admin' : ''}.
         </p>
         <button
@@ -78,10 +82,10 @@ export function InviteLandingPage() {
     <div className="center-page">
       <main className="card">
         <div className={styles.brand}>
-          <Logo size={40} />
+          <BrandLogo size={40} />
           <div>
             <h1 className={styles.title}>You're invited</h1>
-            <p className={styles.sub}>Flack team chat</p>
+            <p className={styles.sub}>{name}</p>
           </div>
         </div>
         {error && (

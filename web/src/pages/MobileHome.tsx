@@ -13,9 +13,11 @@ import { NotificationPrompt } from '../components/NotificationPrompt';
 import { StatusEmoji } from '../components/StatusEmoji';
 import { ChannelDialogs, type ChannelDialog } from '../components/ChannelDialogs';
 import { BookmarkIcon, ComposeIcon, HashIcon, LockIcon, PlusIcon, SearchIcon } from '../components/icons';
+import { useBranding } from '../data/branding';
 import styles from './MobileHome.module.css';
 
 export function MobileHome() {
+  const { name } = useBranding();
   const me = useMe();
   const { channels, reads, prefs, manualReads } = useWorkspace();
   const counts = useMentionCounts();
@@ -26,7 +28,7 @@ export function MobileHome() {
 
   return (
     <div className={styles.page}>
-      <MobileHeader title="Flack" />
+      <MobileHeader title={name} />
       <NotificationPrompt variant="mobile" />
       <div className={styles.scroll}>
         <Link to="/search" className={`${styles.row} ${styles.muted}`}>
