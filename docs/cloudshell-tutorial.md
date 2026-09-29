@@ -57,5 +57,5 @@ notifications like a native app.
 
 <walkthrough-conclusion-trophy></walkthrough-conclusion-trophy>
 
-To update later, pull the latest code and run `npm run deploy` (it runs the full test suite
-first) or `scripts/deploy.sh` to deploy right away.
+To update later, open Cloud Shell and run `cd flack && npm run update`. Your settings are
+kept, and admins see a note in the app when a new version is out.

@@ -141,3 +141,21 @@
     margin-left: auto;
   }
 }
+.update {
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+  background: var(--accent-soft);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.update a {
+  font-weight: 600;
+}
+.version {
+  margin: 28px 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}

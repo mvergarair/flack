@@ -1,5 +1,7 @@
 name: CI
 
+# Mirrors `npm run verify`, split into parallel jobs. Everything runs against the local
+# Firebase emulators (project demo-flack): no Google Cloud project or secrets are needed.
 on:
   push:
     branches: [main]
@@ -8,10 +10,36 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  verify:
+  scripts:
+    name: Shell scripts
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - run: shellcheck --severity=warning scripts/*.sh
+
+  build:
+    name: Typecheck, unit tests and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run test:unit
+      - run: npm run build
+      - run: node scripts/check-build.mjs
+
+  rules:
+    name: Security rules and functions
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,8 +50,50 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-${{ hashFiles('package-lock.json') }}
       - run: npm ci
-      - run: npx playwright install --with-deps chromium webkit
-      # Typecheck, unit tests, security-rules tests, end-to-end tests and the production build,
-      # all against the local emulators (no Google Cloud project or secrets needed).
-      - run: npm run verify
+      - run: npm run test:emu
+
+  e2e:
+    name: End to end (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Chromium
+            projects: --project=chromium
+            browsers: chromium
+          - name: WebKit and phones
+            projects: --project=webkit --project=iphone --project=pixel
+            browsers: chromium webkit
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-${{ hashFiles('package-lock.json') }}
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.browsers }}
+      - run: npm run build -w firebase/functions
+      - name: Playwright
+        run: scripts/fb.sh emulators:exec --project demo-flack --only auth,firestore,database,storage,functions,pubsub "cd e2e && npx playwright test ${{ matrix.projects }}"
+      - name: Upload the Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-${{ matrix.browsers == 'chromium' && 'chromium' || 'webkit-phones' }}
+          path: e2e/artifacts
+          retention-days: 7

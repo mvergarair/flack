@@ -25,8 +25,10 @@ function Svg({ size = 18, children, strokeWidth = 1.9, ...rest }: P) {
 export const Logo = ({ size = 32 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
     <rect width="64" height="64" rx="14" fill="#1E2B2F" />
-    <path d="M14 18a6 6 0 0 1 6-6h24a6 6 0 0 1 6 6v18a6 6 0 0 1-6 6H28l-9 8v-8h1a6 6 0 0 1-6-6z" fill="#2F6FD6" />
-    <path d="M25 22h14M25 29h10M25 22v14" stroke="#fff" strokeWidth="4" strokeLinecap="round" fill="none" />
+    <path d="M20.5 15H43.5A9.5 9.5 0 0 1 53 24.5V35.5A9.5 9.5 0 0 1 43.5 45H28L16.5 53L20.5 45A9.5 9.5 0 0 1 11 35.5V24.5A9.5 9.5 0 0 1 20.5 15Z" fill="none" stroke="#FFB020" strokeWidth="3.5" strokeLinejoin="round" />
+    <circle cx="22.2" cy="34.1" r="3" fill="#FFD54F" />
+    <circle cx="32" cy="31.6" r="3.8" fill="#FF9800" />
+    <circle cx="42.2" cy="28.2" r="4.7" fill="#F4511E" />
   </svg>
 );
 

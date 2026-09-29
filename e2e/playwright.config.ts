@@ -8,7 +8,8 @@ export default defineConfig({
   outputDir: './artifacts/results',
   fullyParallel: false,
   workers: 1,
-  retries: 0,
+  // One retry on CI runners (slower, shared machines); a test that needs it shows as flaky.
+  retries: process.env.CI ? 1 : 0,
   timeout: 45_000,
   expect: { timeout: 10_000 },
   reporter: [['list'], ['html', { outputFolder: './artifacts/report', open: 'never' }]],

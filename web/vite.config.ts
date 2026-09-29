@@ -2,8 +2,18 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import { readFileSync } from 'node:fs';
+
+// The Flack version (root package.json) and the GitHub repo whose releases the admin page
+// checks for updates. Forks can point it at their own repo, or set it empty to turn it off.
+const { version } = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')) as { version: string };
+const updateRepo = process.env.VITE_FLACK_UPDATE_REPO ?? 'mvergarair/flack';
 
 export default defineConfig({
+  define: {
+    __FLACK_VERSION__: JSON.stringify(version),
+    __FLACK_UPDATE_REPO__: JSON.stringify(updateRepo),
+  },
   plugins: [
     react(),
     VitePWA({

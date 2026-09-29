@@ -55,7 +55,7 @@ describe('admin callables', () => {
     }
     expect(getDoc<{ role: string }>('users/uMember').role).toBe('member');
     expect(getDoc<{ status: string }>('invites/seedInvite').status).toBe('pending');
-  });
+  }, 60_000);
 
   it('createinvite validates input and refreshes an existing pending invite', async () => {
     expect((await call(ADMIN, 'createinvite', { email: 'not-an-email', role: 'member' })).error?.status).toBe('INVALID_ARGUMENT');

@@ -139,14 +139,8 @@ fi
 
 # --- 5. Services -----------------------------------------------------------------------------
 step "Turning on the Google Cloud services Flack uses (takes a minute)"
-"$G" services enable \
-  firebase.googleapis.com firestore.googleapis.com firebasedatabase.googleapis.com \
-  firebasestorage.googleapis.com storage.googleapis.com identitytoolkit.googleapis.com \
-  cloudfunctions.googleapis.com run.googleapis.com cloudbuild.googleapis.com \
-  artifactregistry.googleapis.com eventarc.googleapis.com pubsub.googleapis.com \
-  cloudscheduler.googleapis.com fcm.googleapis.com firebaserules.googleapis.com \
-  firebasehosting.googleapis.com billingbudgets.googleapis.com cloudresourcemanager.googleapis.com \
-  secretmanager.googleapis.com --quiet
+# shellcheck disable=SC2046
+"$G" services enable $(grep -v '^#' "$ROOT/scripts/services.txt") --quiet
 ok "Services enabled"
 
 step "Firebase"

@@ -4,6 +4,7 @@ import { db } from '../firebase';
 import { useMe } from '../auth/AuthProvider';
 import { useWorkspace, presenceDot } from '../data/workspace';
 import { adminApi, inviteUrl } from '../data/admin';
+import { FLACK_VERSION, useUpdateAvailable } from '../data/updates';
 import { friendlyError } from '../lib/errors';
 import { formatRelative, formatShortTime, lastOnlineLabel } from '../lib/time';
 import { useIsMobile } from '../lib/hooks';
@@ -60,6 +61,8 @@ export function AdminPage() {
     }
   };
 
+  const update = useUpdateAvailable(true);
+
   const changeRole = (u: UserProfile, role: Role) => run(`role:${u.id}`, () => adminApi.setRole({ uid: u.id, role }));
 
   return (
@@ -78,6 +81,15 @@ export function AdminPage() {
               <PlusIcon size={16} /> Invite people
             </button>
           </header>
+          {update && (
+            <div className={styles.update} role="status" data-testid="update-banner">
+              <strong>Flack {update.version} is available</strong> (you're on {FLACK_VERSION}).{' '}
+              <a href={update.url} target="_blank" rel="noreferrer">
+                What's new
+              </a>
+              . To update, run <code>npm run update</code> in your Flack folder.
+            </div>
+          )}
 
           {error && (
             <p role="alert" className={styles.alert}>
@@ -180,6 +192,9 @@ export function AdminPage() {
               })}
             </ul>
           </section>
+          <p className={styles.version} data-testid="flack-version">
+            Flack {FLACK_VERSION}
+          </p>
         </div>
       </div>
 
