@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError, matchRoute, messageJson, normalizePath, pageParams, parseDmBody, parsePostBody, userJson } from './routes.js';
+import { readFileSync } from 'node:fs';
+import { parse } from 'yaml';
+import { ApiError, ROUTES, docsRedirect, matchRoute, messageJson, normalizePath, pageParams, parseDmBody, parsePostBody, userJson } from './routes.js';
 
 const err = (fn: () => unknown) => {
   try {
@@ -72,5 +74,22 @@ describe('response shapes', () => {
 
   it('hides the text of deleted messages', () => {
     expect(messageJson('c1', 'm1', { text: 'secret', deleted: true }).text).toBe('');
+  });
+});
+
+describe('openapi.yaml', () => {
+  const spec = parse(readFileSync(new URL('./openapi.yaml', import.meta.url), 'utf8')) as { paths: Record<string, Record<string, unknown>> };
+
+  it('documents every endpoint the API serves, and nothing else', () => {
+    const served = ROUTES.map((r) => `${r.method} ${r.spec}`).sort();
+    const documented = Object.entries(spec.paths)
+      .flatMap(([path, ops]) => Object.keys(ops).map((m) => `${m.toUpperCase()} ${path}`))
+      .sort();
+    expect(documented).toEqual(served);
+  });
+
+  it('sends browsers at /api, /api/v1 and /api/docs to the reference', () => {
+    expect(['/api', '/api/', '/api/v1', '/api/docs'].map(docsRedirect)).toEqual([true, true, true, true]);
+    expect(docsRedirect('/api/v1/me')).toBe(false);
   });
 });

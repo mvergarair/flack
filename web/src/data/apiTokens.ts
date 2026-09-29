@@ -45,4 +45,5 @@ export async function revokeApiToken(id: string) {
 
 /** Where the API lives for this deployment (Hosting rewrites /api to the function). */
 export const apiBaseUrl = () => `${location.origin}/api/v1`;
-export const API_DOCS_URL = `https://github.com/${__FLACK_UPDATE_REPO__ || 'mvergarair/flack'}/blob/main/docs/API.md`;
+/** This deployment's interactive API reference (built by scripts/build-api-docs.mjs). */
+export const API_DOCS_URL = '/api/docs/';

@@ -8,6 +8,10 @@ Hosting domain); nothing goes through a third party.
 https://<your-project>.web.app/api/v1
 ```
 
+**Every Flack has an interactive reference at `https://<your-project>.web.app/api/docs`** (try
+requests with your token right there) and the OpenAPI 3.1 spec at `/api/openapi.json` for
+Postman, Insomnia or code generators. This page is the same reference as a readable guide.
+
 - [Authentication](#authentication)
 - [Conventions](#conventions): requests, errors, pagination, limits
 - [Me](#me) · [Users](#users) · [Channels](#channels) · [Messages](#messages) · [Direct messages](#direct-messages) · [Search](#search)

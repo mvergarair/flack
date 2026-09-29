@@ -158,7 +158,9 @@ curl -X POST https://<project>.web.app/api/v1/channels/CHANNEL_ID/messages \
 ```
 
 Tokens act as their owner (same channels, same rules), can be read-only, are stored only as a
-hash and can be revoked anytime. Endpoints, errors and examples: [docs/API.md](docs/API.md).
+hash and can be revoked anytime. Each deployment serves an interactive reference at
+`https://<project>.web.app/api/docs` and the OpenAPI spec at `/api/openapi.json`; the same
+reference is in [docs/API.md](docs/API.md).
 
 ## Keyboard shortcuts
 
