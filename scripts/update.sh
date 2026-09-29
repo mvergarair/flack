@@ -46,8 +46,7 @@ main() {
 
   step "Google Cloud services"
   source "$ROOT/scripts/_lib.sh"
-  # shellcheck disable=SC2046
-  if "$ROOT/scripts/gcloud.sh" services enable $(grep -v '^#' scripts/services.txt) --quiet >/dev/null 2>&1; then
+  if enable_services >/dev/null 2>&1; then
     ok "Everything this version needs is on"
   else
     warn "Couldn't check services (your login may not be allowed to); continuing."

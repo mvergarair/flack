@@ -91,6 +91,15 @@ api() { # api METHOD URL [JSON]: prints the response; on an HTTP error shows it 
   if (( code >= 400 )); then printf '%s\n' "$out" >&2; return 1; fi
   printf '%s\n' "$out"
 }
+retry() { # retry a command for ~2 minutes: new projects take a while to grant their owner access
+  local i
+  for i in 1 2 3 4 5 6; do
+    if (( i == 6 )); then "$@"; return; fi
+    "$@" 2>/dev/null && return
+    echo "  Google is still setting up access to the new project; retrying in 20s…"
+    sleep 20
+  done
+}
 quiet() { # run a command, showing its output only if it fails
   local out
   if ! out=$("$@" 2>&1); then printf '%s\n' "$out" >&2; return 1; fi
@@ -149,8 +158,7 @@ fi
 
 # --- 5. Services -----------------------------------------------------------------------------
 step "Turning on the Google Cloud services Flack uses (takes a minute)"
-# shellcheck disable=SC2046
-"$G" services enable $(grep -v '^#' "$ROOT/scripts/services.txt") --quiet
+enable_services
 ok "Services enabled"
 
 step "Firebase"
@@ -175,7 +183,7 @@ if grep -q "$RTDB_NAME" <<<"$instances"; then
   ok "Realtime Database exists"
 else
   # The first (default) instance can only be created through the management API.
-  api POST "https://firebasedatabase.googleapis.com/v1beta/projects/$FLACK_PROJECT/locations/$RTDB_LOC/instances?databaseId=$RTDB_NAME" \
+  retry api POST "https://firebasedatabase.googleapis.com/v1beta/projects/$FLACK_PROJECT/locations/$RTDB_LOC/instances?databaseId=$RTDB_NAME" \
     '{"type":"DEFAULT_DATABASE"}' >/dev/null
   ok "Created the Realtime Database ($RTDB_LOC)"
 fi
@@ -185,7 +193,7 @@ BUCKET="$FLACK_PROJECT.firebasestorage.app"
 if "$G" storage buckets describe "gs://$BUCKET" >/dev/null 2>&1; then
   ok "Storage bucket exists"
 else
-  api POST "https://firebasestorage.googleapis.com/v1alpha/projects/$FLACK_PROJECT/defaultBucket" "{\"location\":\"$FLACK_REGION\"}" >/dev/null
+  retry api POST "https://firebasestorage.googleapis.com/v1alpha/projects/$FLACK_PROJECT/defaultBucket" "{\"location\":\"$FLACK_REGION\"}" >/dev/null
   ok "Created the Storage bucket"
 fi
 
@@ -256,6 +264,7 @@ if ! "$ROOT/scripts/deploy.sh"; then
   "$ROOT/scripts/deploy.sh"
 fi
 
+if [[ "$BUDGET_USD" == 0 ]]; then budget_note="No budget alert set."; else budget_note="Your budget alert: US\$$BUDGET_USD/month."; fi
 cat <<EOF
 
 ${green}${bold}Flack is deployed: https://$FLACK_PROJECT.web.app${off}
@@ -267,5 +276,5 @@ ${bold}One last click${off} (Google doesn't allow scripts to do this):
 Then open https://$FLACK_PROJECT.web.app and sign in as ${bold}$ADMIN_EMAIL${off}.
 You'll be the admin; invite everyone else from the Admin page.
 
-Costs: Blaze is pay-as-you-go. See README → Costs. Your budget alert: US\$$BUDGET_USD/month.
+Costs: Blaze is pay-as-you-go. See README → Costs. $budget_note
 EOF

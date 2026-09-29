@@ -4,7 +4,7 @@
 // No IP addresses or request metadata are stored; request logs are excluded (telemetry/deploy.sh).
 // Everything expires 13 months after it was last written (Firestore TTL, firestore.indexes.json).
 import { initializeApp } from 'firebase-admin/app';
-import { FieldPath, getFirestore, Timestamp } from 'firebase-admin/firestore';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { onRequest } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
@@ -52,7 +52,7 @@ export const aggregatestats = onSchedule({ schedule: 'every day 06:00', timeZone
   }
   const today = now.toISOString().slice(0, 10);
   await db.doc(`history/${today}`).set({ date: today, installs30d: latest.length, expireAt: Timestamp.fromMillis(now.getTime() + KEEP_MS) });
-  const history = (await db.collection('history').orderBy(FieldPath.documentId(), 'desc').limit(400).get()).docs
+  const history = (await db.collection('history').orderBy('date', 'desc').limit(400).get()).docs
     .map((d) => ({ date: d.get('date') as string, installs30d: d.get('installs30d') as number }))
     .reverse();
   await db.doc('public/stats').set(aggregate(latest, history, now));

@@ -7,6 +7,17 @@ a major version means you need to do something when updating, and the notes say 
 Shell: `cd flack && npm run update`). Your settings are kept. Admins also see an "update
 available" note on the People & invites page when a new release is out.
 
+## 1.5.1 (2026-09-29)
+
+- **Installer and update fix.** 1.5.0 added two Google Cloud services, which put the list over
+  the 20 Google accepts in one request: new installs stopped at "Turning on the Google Cloud
+  services", and `npm run update` skipped the step with a warning. Both now turn services on in
+  batches. If you updated to 1.5.0, run `npm run update` again so the Health card can read error
+  counts.
+- **New projects.** The installer retries creating the Realtime Database and the Storage bucket
+  while Google finishes granting a brand-new project's owner access, instead of failing.
+- The installer's closing note says "No budget alert set" when you chose 0.
+
 ## 1.5.0 (2026-09-29)
 
 - **Health card for admins.** People & invites shows the last 24 hours: messages, members active
