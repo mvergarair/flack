@@ -88,3 +88,16 @@ describe('typing', () => {
     await assertFails(set(ref(rdb(as(env, 'member')), `typing/${KEY}/member`), 'yes'));
   });
 });
+
+describe('Flackbot drafts', () => {
+  it('only their owner reads them, and nobody writes them (functions only)', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await set(ref(ctx.database() as unknown as Database, 'botDrafts/member'), { status: 'Thinking', text: '', questionId: 'q', conversationId: 'c', at: 1 });
+    });
+    await assertSucceeds(get(ref(rdb(as(env, 'member')), 'botDrafts/member')));
+    await assertFails(get(ref(rdb(as(env, 'member2')), 'botDrafts/member')));
+    await assertFails(get(ref(rdb(as(env, 'member')), 'botDrafts')));
+    await assertFails(set(ref(rdb(as(env, 'member')), 'botDrafts/member'), { status: 'fake', text: 'hi' }));
+    await assertFails(remove(ref(rdb(as(env, 'member')), 'botDrafts/member')));
+  });
+});

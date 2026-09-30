@@ -437,6 +437,18 @@ function BotRefBar({ botRef }: { botRef: NonNullable<Message['botRef']> }) {
     label = 'Open scheduled messages';
   }
   const canSnooze = botRef.kind === 'reminder' && !!botRef.text;
+  if (botRef.kind === 'ai' && botRef.sources?.length) {
+    // Ask Flackbot answers: the messages it cited as [n].
+    return (
+      <div className={styles.botBar} data-testid="bot-sources">
+        {botRef.sources.map((s) => (
+          <Link key={s.n} to={s.threadParentId ? `/c/${s.channelId}/t/${s.threadParentId}` : `/c/${s.channelId}?m=${s.messageId}`} className={styles.botLink}>
+            [{s.n}] {s.label}
+          </Link>
+        ))}
+      </div>
+    );
+  }
   if (!to && !canSnooze) return null;
   const snooze = async (at: number) => {
     await scheduleReminder(me.id, { text: botRef.text!, at, channelId: botRef.channelId, messageId: botRef.messageId, threadParentId: botRef.threadParentId });

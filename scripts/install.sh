@@ -277,4 +277,10 @@ Then open https://$FLACK_PROJECT.web.app and sign in as ${bold}$ADMIN_EMAIL${off
 You'll be the admin; invite everyone else from the Admin page.
 
 Costs: Blaze is pay-as-you-go. See README → Costs. $budget_note
+
+${bold}Optional: Ask Flackbot (AI answers over your team's messages)${off}
+  Everything is set up except one step Google keeps for people: accepting Anthropic's terms.
+  1. Open https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/claude-sonnet-5-5?project=$FLACK_PROJECT
+  2. Click ${bold}Enable${off} and follow the form.
+  3. In Flack: People & invites → Flackbot → turn on Ask Flackbot. It's off until you do.
 EOF

@@ -12,7 +12,8 @@ import { UserMenu } from '../components/UserMenu';
 import { NotificationPrompt } from '../components/NotificationPrompt';
 import { StatusEmoji } from '../components/StatusEmoji';
 import { ChannelDialogs, type ChannelDialog } from '../components/ChannelDialogs';
-import { BookmarkIcon, ComposeIcon, HashIcon, LockIcon, PlusIcon, SearchIcon } from '../components/icons';
+import { BookmarkIcon, ComposeIcon, HashIcon, LockIcon, PlusIcon, SearchIcon, SparkleIcon } from '../components/icons';
+import { useAiSettings } from '../data/ai';
 import { useBranding } from '../data/branding';
 import styles from './MobileHome.module.css';
 
@@ -88,11 +89,20 @@ export function MobileHome() {
 }
 
 export function MobileHeader({ title }: { title: string }) {
+  const me = useMe();
+  const ai = useAiSettings();
   return (
     <header className={styles.header}>
       <div className={styles.headerRow}>
         <h1 className={styles.title}>{title}</h1>
-        <UserMenu variant="mobile" />
+        <span className={styles.headerActions}>
+          {(ai?.enabled || me.role === 'admin') && (
+            <Link to="/flackbot" className={styles.askBtn} aria-label="Ask Flackbot" data-testid="ask-flackbot">
+              <SparkleIcon size={20} />
+            </Link>
+          )}
+          <UserMenu variant="mobile" />
+        </span>
       </div>
     </header>
   );

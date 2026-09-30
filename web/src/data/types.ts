@@ -81,7 +81,17 @@ export interface Message {
   /** Written by the unfurl function. */
   linkPreviews?: LinkPreview[];
   /** Flackbot messages: what they refer to (the message a reminder is about, etc.). */
-  botRef?: { kind: 'reminder' | 'schedule-failed' | 'welcome'; text?: string; channelId?: string; messageId?: string; threadParentId?: string | null };
+  botRef?: {
+    kind: 'reminder' | 'schedule-failed' | 'welcome' | 'ai';
+    text?: string;
+    channelId?: string;
+    messageId?: string;
+    threadParentId?: string | null;
+    /** Ask Flackbot answers: the messages cited as [n]. */
+    sources?: { n: number; channelId: string; messageId: string; threadParentId: string | null; label: string }[];
+  };
+  /** Ask Flackbot questions and answers: which conversation they belong to. */
+  ai?: { conversationId: string; questionId?: string };
 }
 
 export interface SavedItem {

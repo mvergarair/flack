@@ -264,3 +264,15 @@ export const SettingsIcon = (p: P) => (
 export const DotIcon = ({ color }: { color: string }) => (
   <span style={{ width: 8, height: 8, borderRadius: '50%', background: color, display: 'inline-block' }} />
 );
+export const SparkleIcon = (p: P) => (
+  <Svg {...p}>
+    <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" />
+    <path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z" />
+  </Svg>
+);
+export const NewChatIcon = (p: P) => (
+  <Svg {...p}>
+    <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" />
+    <path d="M12 9v6M9 12h6" />
+  </Svg>
+);

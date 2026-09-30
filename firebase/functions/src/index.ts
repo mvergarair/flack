@@ -19,3 +19,4 @@ export { createapitoken, revokeapitoken } from './api/callables.js';
 export { setdefaultchannels } from './admin/settings.js';
 export { dailystats, recordvitals } from './stats/daily.js';
 export { openflackbot } from './bot/bot.js';
+export { askflackbot, testflackbotai } from './ai/ask.js';

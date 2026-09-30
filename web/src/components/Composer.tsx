@@ -17,6 +17,8 @@ import { PendingFiles } from './PendingFiles';
 import { requestEdit } from './MessageItem';
 import { SchedulePicker } from './SchedulePicker';
 import { AtIcon, BellIcon, BoldIcon, ClockIcon, CodeBlockIcon, CodeIcon, ItalicIcon, LinkIcon, ListIcon, OrderedListIcon, PaperclipIcon, SendIcon } from './icons';
+import { askFlackbot, currentConversation, useAiSettings } from '../data/ai';
+import { BOT_ID } from '../lib/bot';
 import styles from './Composer.module.css';
 
 type Candidate = { kind: 'user'; user: UserProfile } | { kind: 'broadcast'; which: Broadcast };
@@ -49,6 +51,7 @@ const saveDraft = (k: string, v: string) => {
 
 export function Composer({ channel, thread, placeholder, autoFocus, lastOwnMessageId }: Props) {
   const me = useMe();
+  const ai = useAiSettings();
   const { users, presence, scheduled } = useWorkspace();
   const mobile = useIsMobile();
   const key = draftKey(channel.id, thread?.id);
@@ -265,6 +268,10 @@ export function Composer({ channel, thread, placeholder, autoFocus, lastOwnMessa
       try {
         await sendMessage({ channel, me: me.id, text: body, mentions: extractMentions(body), thread, messageId, users, alsoToChannel });
         setAlsoToChannel(false);
+        // In the Flackbot DM, questions go to Ask Flackbot (the answer arrives as a message).
+        if (!thread && ai?.enabled && channel.memberIds.includes(BOT_ID)) {
+          askFlackbot(messageId, currentConversation()).catch((err) => setError(friendlyError(err)));
+        }
       } catch (err) {
         setText((cur) => (cur ? `${draft}\n${cur}` : draft));
         setPicked(draftPicked);

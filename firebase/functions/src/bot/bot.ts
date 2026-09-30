@@ -24,6 +24,11 @@ export async function botConfig(now = Date.now()): Promise<BotConfig> {
   return config;
 }
 
+/** Whether Ask Flackbot is on (only read for messages in a Flackbot DM). */
+async function aiEnabled(): Promise<boolean> {
+  return (await db.doc('config/ai').get()).get('enabled') === true;
+}
+
 const typingKey = () => 't_' + randomBytes(24).toString('base64').replace(/[^A-Za-z0-9]/g, '').slice(0, 30).padEnd(24, 'x');
 
 export interface BotPost {
@@ -121,6 +126,8 @@ export function dmFromBotInTx(tx: FirebaseFirestore.Transaction, uid: string, p:
 export async function answerMessage(channelId: string, messageId: string, msg: MessageDoc, channel: ChannelDoc): Promise<void> {
   if (msg.authorId === BOT_ID || msg.deleted || !msg.text?.trim()) return;
   const inBotDm = channel.type === 'dm' && channel.memberIds.includes(BOT_ID);
+  // With Ask Flackbot on, the app sends DM questions to the AI (askflackbot) instead.
+  if (inBotDm && (await aiEnabled())) return;
   const { responses } = await botConfig();
   const hit = responses.length ? matchResponse(msg.text, responses) : null;
   if (!hit && !inBotDm) return;

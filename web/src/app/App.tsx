@@ -13,6 +13,7 @@ import { ActivityPage } from '../pages/ActivityPage';
 import { DmsPage } from '../pages/DmsPage';
 import { LaterPage } from '../pages/LaterPage';
 import { SearchPage } from '../pages/SearchPage';
+import { FlackbotPage } from '../pages/FlackbotPage';
 import { NotFound } from '../pages/NotFound';
 
 function RequireAuth() {
@@ -60,6 +61,7 @@ const router = createBrowserRouter([
           { path: 'later', element: <LaterPage /> },
           { path: 'saved', element: <Navigate to="/later" replace /> },
           { path: 'search', element: <SearchPage /> },
+          { path: 'flackbot', element: <FlackbotPage /> },
           { element: <RequireAdmin />, children: [{ path: 'admin', element: <AdminPage /> }] },
           { path: '*', element: <NotFound /> },
         ],

@@ -39,8 +39,8 @@ export const onmessagecreated = onDocumentCreated({ document: 'channels/{channel
   // Flackbot's auto-responses (and help in its DM) run alongside too.
   const bot = answerMessage(channelId, messageId, msg, channel).catch((err) => logger.error('Flackbot failed', { messageId, err: String(err) }));
   const background = Promise.all([unfurl, bot]);
-  // Flackbot's welcome is waiting in the DM (unread); it isn't worth a notification.
-  if (msg.authorId === BOT_ID && msg.botRef?.kind === 'welcome') return void (await background);
+  // Flackbot's welcome waits in the DM (unread); AI answers arrive while you're asking.
+  if (msg.authorId === BOT_ID && (msg.botRef?.kind === 'welcome' || msg.botRef?.kind === 'ai')) return void (await background);
 
   let thread: { parentAuthorId: string; replyUserIds: string[] } | null = null;
   if (msg.threadParentId) {

@@ -76,3 +76,57 @@ describe('Flackbot in channels', () => {
     await assertFails(addDoc(collection(fs(as(env, 'admin')), 'channels/pub/messages'), { ...message('flackbot'), createdAt: serverTimestamp() }));
   });
 });
+
+const ai = (uid: string, extra: Record<string, unknown> = {}) => ({
+  enabled: true,
+  model: 'claude-sonnet-5-5',
+  dailyLimit: 30,
+  monthlyBudgetUsd: 20,
+  updatedAt: serverTimestamp(),
+  updatedBy: uid,
+  ...extra,
+});
+
+describe('Ask Flackbot settings and usage', () => {
+  it('everyone reads whether it is on; only admins change it', async () => {
+    await assertSucceeds(setDoc(doc(fs(as(env, 'admin')), 'config/ai'), ai('admin')));
+    await assertSucceeds(getDoc(doc(fs(as(env, 'member')), 'config/ai')));
+    await assertFails(setDoc(doc(fs(as(env, 'member')), 'config/ai'), ai('member')));
+    await assertFails(setDoc(doc(fs(as(env, 'staleAdmin')), 'config/ai'), ai('staleAdmin')));
+  });
+
+  it('validates the model and limits', async () => {
+    const db = fs(as(env, 'admin'));
+    const bad = (extra: Record<string, unknown>) => assertFails(setDoc(doc(db, 'config/ai'), ai('admin', extra)));
+    await bad({ model: 'gpt-5' });
+    await bad({ dailyLimit: 0 });
+    await bad({ dailyLimit: 501 });
+    await bad({ dailyLimit: 2.5 });
+    await bad({ monthlyBudgetUsd: -1 });
+    await bad({ enabled: 'yes' });
+    await bad({ apiKey: 'sk-...' });
+    await assertSucceeds(setDoc(doc(db, 'config/ai'), ai('admin', { model: 'claude-haiku-4-5', monthlyBudgetUsd: 0 })));
+  });
+
+  it('usage and connection problems are for admins only, and written by functions', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'aiUsage/2026-09'), { questions: 3, costUsd: 0.1 });
+      await setDoc(doc(ctx.firestore(), 'aiUsage/2026-09/people/member'), { dayCount: 3 });
+      await setDoc(doc(ctx.firestore(), 'config/aiStatus'), { error: 'x' });
+    });
+    await assertSucceeds(getDoc(doc(fs(as(env, 'admin')), 'aiUsage/2026-09')));
+    await assertSucceeds(getDoc(doc(fs(as(env, 'admin')), 'config/aiStatus')));
+    await assertFails(getDoc(doc(fs(as(env, 'member')), 'aiUsage/2026-09')));
+    await assertFails(getDoc(doc(fs(as(env, 'member')), 'aiUsage/2026-09/people/member')));
+    await assertFails(getDoc(doc(fs(as(env, 'member')), 'config/aiStatus')));
+    await assertFails(setDoc(doc(fs(as(env, 'admin')), 'aiUsage/2026-09'), { questions: 0, costUsd: 0 }));
+    await assertFails(setDoc(doc(fs(as(env, 'admin')), 'config/aiStatus'), { error: null }));
+  });
+
+  it('clients cannot mark messages as Ask Flackbot questions or answers', async () => {
+    const mine = fs(as(env, 'member'));
+    await assertFails(setDoc(doc(mine, 'channels/dm_flackbot_member/messages/q1'), { ...message('member'), createdAt: serverTimestamp(), ai: { conversationId: 'c' } }));
+    await assertSucceeds(setDoc(doc(mine, 'channels/dm_flackbot_member/messages/q1'), { ...message('member'), createdAt: serverTimestamp() }));
+    await assertFails(updateDoc(doc(mine, 'channels/dm_flackbot_member/messages/q1'), { ai: { conversationId: 'c' } }));
+  });
+});
