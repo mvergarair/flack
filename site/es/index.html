@@ -30,6 +30,7 @@
         </a>
         <nav aria-label="Secciones">
           <a href="#features">Funciones</a>
+          <a href="#ask">Flackbot</a>
           <a href="#install">Instalar</a>
           <a href="#cost">Costos</a>
           <a href="#security">Seguridad</a>
@@ -136,7 +137,45 @@
               <h3>API HTTP</h3>
               <p>Publica desde CI, scripts y bots, lee canales y busca con tokens personales. <a href="https://github.com/mvergarair/flack/blob/main/docs/API.md">Documentación de la API</a></p>
             </article>
+            <article class="card">
+              <span class="icon">✨</span>
+              <h3>Pregúntale a Flackbot</h3>
+              <p>IA opcional: pregunta qué decidió tu equipo y recibe una respuesta corta con enlaces a los mensajes. Solo ve lo que tú puedes ver.</p>
+            </article>
+            <article class="card">
+              <span class="icon">🤖</span>
+              <h3>Flackbot</h3>
+              <p>Los recordatorios llegan por mensaje directo con “Posponer”, da la bienvenida a quien se suma y responde automáticamente las preguntas frecuentes que definas.</p>
+            </article>
+            <article class="card">
+              <span class="icon">🎨</span>
+              <h3>Tu marca</h3>
+              <p>El nombre, logo, colores y mensaje de inicio de sesión de tu espacio, configurados por los admins en un par de clics.</p>
+            </article>
           </div>
+        </div>
+      </section>
+
+      <!-- Pregúntale a Flackbot -->
+      <section id="ask" class="section ask">
+        <div class="wrap ask-inner">
+          <div>
+            <p class="kicker">Nuevo · Pregúntale a Flackbot</p>
+            <h2>Respuestas desde <span class="grad">las conversaciones de tu equipo.</span></h2>
+            <p>Pregunta “¿qué decidimos sobre precios?” o “¿qué me perdí hoy?” en un panel junto a tus canales (pantalla completa en el teléfono). Flackbot busca y lee los mensajes, y responde en pocas líneas con enlaces a sus fuentes.</p>
+            <ul class="ticks">
+              <li><strong>Solo ve lo que tú puedes ver.</strong> Sus búsquedas corren como tú, con las mismas reglas que la app, y no puede publicar ni cambiar nada.</li>
+              <li><strong>Claude en Vertex AI, dentro de tu propio proyecto de Google Cloud.</strong> Sin API keys ni otra factura: una pregunta típica cuesta 2–5 centavos de dólar.</li>
+              <li><strong>Apagado hasta que un admin lo active,</strong> con un límite diario por persona y un presupuesto mensual que lo pausa.</li>
+            </ul>
+          </div>
+          <figure class="frame desktop wide">
+            <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span>tu-equipo.web.app</span></div>
+            <picture>
+              <source srcset="../assets/ask-desktop-dark.png" media="(prefers-color-scheme: dark)" />
+              <img src="../assets/ask-desktop-light.png" alt="El panel de Flackbot respondiendo una pregunta sobre un canal, con enlaces a cuatro mensajes" width="1440" height="900" loading="lazy" />
+            </picture>
+          </figure>
         </div>
       </section>
 
@@ -146,7 +185,8 @@
           <div class="tabs" role="tablist" aria-label="Pantallas">
             <button role="tab" aria-selected="true" data-shot="thread" data-alt="Un hilo abierto junto a su canal">Hilos</button>
             <button role="tab" aria-selected="false" data-shot="search" data-alt="Búsqueda de canales, personas y mensajes">Búsqueda</button>
-            <button role="tab" aria-selected="false" data-shot="activity" data-alt="Actividad: menciones, respuestas y recordatorios">Actividad</button>
+            <button role="tab" aria-selected="false" data-shot="activity" data-alt="Actividad: menciones y respuestas">Actividad</button>
+            <button role="tab" aria-selected="false" data-shot="flackbot" data-alt="El mensaje directo de Flackbot: bienvenida, un recordatorio con Posponer y una respuesta con fuentes">Flackbot</button>
             <button role="tab" aria-selected="false" data-shot="admin" data-alt="Admin: invitaciones y personas">Admin</button>
           </div>
           <figure class="frame desktop wide">
@@ -208,6 +248,7 @@ cd flack</code><button class="copy" aria-label="Copiar" data-copied="Copiado">Co
             <p>
               El instalador crea una <strong>alerta de presupuesto</strong> (US$5 al mes por defecto) que te avisa por email al
               50%, 90% y 100%. Lo único que normalmente verás son unos centavos al mes por guardar las imágenes de las funciones.
+              Pregúntale a Flackbot es opcional y se cobra por pregunta (unos 2–5 centavos con Claude Sonnet 5.5), con un tope mensual que tú defines.
             </p>
           </div>
           <div class="card meters" aria-label="Uso típico de un equipo de 25 personas comparado con las cuotas gratuitas">
@@ -259,6 +300,7 @@ cd flack</code><button class="copy" aria-label="Copiar" data-copied="Copiado">Co
           <details><summary>¿Puedo usar mi propio dominio?</summary><p>Sí. Agrega un dominio personalizado en Firebase Hosting y súmalo a los dominios autorizados para iniciar sesión.</p></details>
           <details><summary>¿Es una app de verdad en el teléfono?</summary><p>Es una PWA instalable: agrégala a la pantalla de inicio en iPhone o instálala en Android para tener notificaciones y pantalla completa.</p></details>
           <details><summary>¿La app está en español?</summary><p>Por ahora la interfaz está en inglés. Esta página y la guía de instalación están en español.</p></details>
+          <details><summary>¿Qué le envía Flackbot a la IA?</summary><p>Solo lo necesario para responder: la pregunta y los mensajes que encuentran sus búsquedas, siempre de canales que quien pregunta ya puede leer. Corre con Claude a través de Vertex AI en tu propio proyecto de Google Cloud, bajo los términos de Google Cloud. Viene apagado; para activarlo hay que habilitar una vez el modelo de Claude en Vertex AI Model Garden y tener cuota de Vertex AI (el instalador la solicita).</p></details>
           <details><summary>¿Cómo la actualizo?</summary><p>Corre <code>npm run update</code> en la carpeta de Flack. Descarga la última versión, activa lo nuevo que necesite y la despliega, sin tocar tu configuración. Los admins ven un aviso en la app cuando sale una versión nueva.</p></details>
         </div>
       </section>

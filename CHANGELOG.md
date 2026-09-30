@@ -16,6 +16,9 @@ available" note on the People & invites page when a new release is out.
   automatic request, ask for less or contact Google Cloud support from the quotas page.
 - The Ask Flackbot question box grows with long questions (wrapped lines included) instead of
   scrolling the first line out of view.
+- Flackbot's "Snooze" link lines up with "View message".
+- Website: an Ask Flackbot section and screenshots, Flackbot and branding in the features, and
+  install steps that fit on phones.
 
 ## 1.7.0 (2026-09-29)
 
