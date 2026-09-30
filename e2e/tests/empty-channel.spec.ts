@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures.ts';
 import { emu, users, PASSWORD } from '../helpers.ts';
 
 // Uses the persistent IndexedDB cache like the deployed app (no ?memcache).

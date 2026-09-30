@@ -9,8 +9,18 @@ import {
   type Unsubscribe,
 } from 'firebase/firestore';
 import { auth } from '../firebase';
+import { recordSnapshot } from './listenerWatch';
 
 type Target = DocumentReference | Query;
+
+/** A readable name for a listener target, e.g. "users/u1/reads" (used by the loop tripwire). */
+function describeTarget(target: Target): string {
+  if ('path' in target && typeof target.path === 'string') return target.path;
+  // Queries don't expose their path publicly; fall back to the SDK's internal one if present.
+  const q = (target as unknown as { _query?: { collectionGroup?: string | null; path?: { canonicalString?: () => string } } })._query;
+  if (q?.collectionGroup) return `collectionGroup(${q.collectionGroup})`;
+  return q?.path?.canonicalString?.() || 'a query';
+}
 
 /**
  * onSnapshot that survives transient permission-denied errors (e.g. a listener attached
@@ -19,6 +29,7 @@ type Target = DocumentReference | Query;
  * account) or retries run out, `onError` is called.
  */
 function listen(target: Target, next: (snap: never) => void, onError?: (err: FirestoreError) => void, options: SnapshotListenOptions = {}): Unsubscribe {
+  const key = describeTarget(target);
   let unsub: Unsubscribe = () => undefined;
   let attempts = 0;
   let stopped = false;
@@ -30,6 +41,7 @@ function listen(target: Target, next: (snap: never) => void, onError?: (err: Fir
       options,
       (snap) => {
         attempts = 0;
+        recordSnapshot(key);
         next(snap as never);
       },
       async (err) => {

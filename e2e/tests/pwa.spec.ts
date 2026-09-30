@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures.ts';
 import { emu, users, PASSWORD } from '../helpers.ts';
 
 // The production build (emulator mode) served by `vite preview`, with the real service worker.

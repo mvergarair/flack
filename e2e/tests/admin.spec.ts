@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures.ts';
 import { readFileSync } from 'node:fs';
 import { asUser, callFunction, emu, open, signIn, users, PASSWORD } from '../helpers.ts';
 

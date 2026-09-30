@@ -1,4 +1,5 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '../fixtures.ts';
+import type { Page } from '@playwright/test';
 import { emu, signIn, users } from '../helpers.ts';
 
 // The emulator answers with a scripted stand-in for Claude (functions ai/model.ts): it searches

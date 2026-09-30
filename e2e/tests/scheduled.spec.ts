@@ -1,4 +1,5 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '../fixtures.ts';
+import type { Page } from '@playwright/test';
 import { asUser, emu, signIn, users } from '../helpers.ts';
 
 const channelMsgs = (page: Page) => page.getByTestId('message-list').getByTestId('message');

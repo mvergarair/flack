@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures.ts';
 import { asUser, emu, signIn, users } from '../helpers.ts';
 
 // The dev server doesn't proxy /api (Hosting does in production), so call the function directly.
