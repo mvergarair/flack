@@ -256,6 +256,17 @@ if [[ "$BUDGET_USD" != "0" ]]; then
   fi
 fi
 
+# --- 6b. Ask Flackbot quota -----------------------------------------------------------------
+# New projects get no Vertex AI quota for Claude. Ask Google for a modest amount now (it's often
+# approved within minutes, and costs nothing until Ask Flackbot is turned on and used).
+step "Vertex AI quota for Ask Flackbot (optional AI)"
+if api POST "https://cloudquotas.googleapis.com/v1/projects/$FLACK_PROJECT/locations/global/quotaPreferences?quotaPreferenceId=flackbot-claude-sonnet" \
+  "{\"service\":\"aiplatform.googleapis.com\",\"quotaId\":\"GlobalOnlinePredictionRequestsPerMinutePerProjectPerBaseModel\",\"dimensions\":{\"base_model\":\"anthropic-claude-sonnet\"},\"quotaConfig\":{\"preferredValue\":\"60\"},\"contactEmail\":\"$ADMIN_EMAIL\",\"justification\":\"Internal team chat assistant (Flack): answers employees' questions about their workspace messages. Low volume.\"}" >/dev/null 2>&1; then
+  ok "Requested 60 Claude Sonnet requests/minute (Google emails $ADMIN_EMAIL when it's decided)"
+else
+  warn "Couldn't request it (it may already exist). You can ask later: https://console.cloud.google.com/iam-admin/quotas?project=$FLACK_PROJECT"
+fi
+
 # --- 7. Deploy -------------------------------------------------------------------------------
 step "Deploying (first deploy takes 5-10 minutes)"
 if ! "$ROOT/scripts/deploy.sh"; then
@@ -282,5 +293,6 @@ ${bold}Optional: Ask Flackbot (AI answers over your team's messages)${off}
   Everything is set up except one step Google keeps for people: accepting Anthropic's terms.
   1. Open https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/claude-sonnet-5-5?project=$FLACK_PROJECT
   2. Click ${bold}Enable${off} and follow the form.
-  3. In Flack: People & invites → Flackbot → turn on Ask Flackbot. It's off until you do.
+  3. Wait for Google to approve the Claude quota requested above (an email to $ADMIN_EMAIL).
+  4. In Flack: People & invites → Ask Flackbot → Check the connection, then turn it on.
 EOF

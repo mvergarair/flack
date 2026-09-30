@@ -210,7 +210,11 @@ a.source:hover {
 }
 .input {
   flex: 1;
+  align-self: center;
   min-height: 24px;
+  max-height: 150px;
+  padding: 5px 0;
+  overflow-y: auto;
   border: none;
   outline: none;
   resize: none;

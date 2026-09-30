@@ -65,6 +65,8 @@ describe('friendlyModelError', () => {
   it('points admins at Model Garden when the model is not enabled', () => {
     expect(friendlyModelError(Object.assign(new Error('Permission denied'), { status: 403 }))).toMatch(/Model Garden/);
     expect(friendlyModelError(Object.assign(new Error('slow down'), { status: 429 }))).toMatch(/too many/);
+    const quota = 'Quota exceeded for aiplatform.googleapis.com/global_online_prediction_requests_per_base_model with base model: anthropic-claude-sonnet.';
+    expect(friendlyModelError(Object.assign(new Error(quota), { status: 429 }))).toMatch(/quota for Claude is too low/);
   });
 });
 

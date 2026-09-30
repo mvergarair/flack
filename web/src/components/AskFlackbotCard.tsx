@@ -6,6 +6,8 @@ import { friendlyError } from '../lib/errors';
 import { SparkleIcon } from './icons';
 import styles from './FlackbotCard.module.css';
 
+const QUOTAS = `https://console.cloud.google.com/iam-admin/quotas?project=${encodeURIComponent(app.options.projectId ?? '')}`;
+
 /** The Model Garden page for a model; the URL is built only from our own list of model ids. */
 const modelGarden = (model: string) => {
   const id = AI_MODELS.find((m) => m.id === model)?.id ?? AI_DEFAULTS.model;
@@ -91,6 +93,13 @@ export function AskFlackbotCard() {
           <a href={modelGarden(form.model)} target="_blank" rel="noreferrer">
             open Model Garden
           </a>
+        </li>
+        <li>
+          Make sure the project has Vertex AI quota for Claude (new projects start at 0; the installer requests 60 a minute):{' '}
+          <a href={QUOTAS} target="_blank" rel="noreferrer">
+            quotas
+          </a>
+          . Search for <code>global_online_prediction_requests_per_base_model</code>, base model <code>anthropic-claude-sonnet</code>.
         </li>
         <li>
           <button className={styles.linkBtn} onClick={runCheck} disabled={check.running}>
