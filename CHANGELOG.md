@@ -7,6 +7,19 @@ a major version means you need to do something when updating, and the notes say 
 Shell: `cd flack && npm run update`). Your settings are kept. Admins also see an "update
 available" note on the People & invites page when a new release is out.
 
+## 1.7.1 (2026-09-29)
+
+- **Ask Flackbot setup: Vertex AI quota.** New Google Cloud projects start with no quota for
+  Claude, so questions failed with "too many questions". The installer now requests some
+  (60 requests a minute; Google emails you its decision), the admin card has a quota step with
+  a link, and admins get a clear message when quota is the problem. If Google denies the
+  automatic request, ask for less or contact Google Cloud support from the quotas page.
+- The Ask Flackbot question box grows with long questions (wrapped lines included) instead of
+  scrolling the first line out of view.
+- Flackbot's "Snooze" link lines up with "View message".
+- Website: an Ask Flackbot section and screenshots, Flackbot and branding in the features, and
+  install steps that fit on phones.
+
 ## 1.7.0 (2026-09-29)
 
 - **Ask Flackbot (optional AI).** Ask about anything your team has discussed ("what did I miss

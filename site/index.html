@@ -29,6 +29,7 @@
         </a>
         <nav aria-label="Sections">
           <a href="#features">Features</a>
+          <a href="#ask">Ask Flackbot</a>
           <a href="#install">Install</a>
           <a href="#cost">Cost</a>
           <a href="#security">Security</a>
@@ -135,7 +136,45 @@
               <h3>HTTP API</h3>
               <p>Post from CI, scripts and bots, read channels and search with personal tokens. <a href="https://github.com/mvergarair/flack/blob/main/docs/API.md">API docs</a></p>
             </article>
+            <article class="card">
+              <span class="icon">✨</span>
+              <h3>Ask Flackbot</h3>
+              <p>Optional AI: ask what your team decided and get a short answer with links to the messages. It only sees what you can see.</p>
+            </article>
+            <article class="card">
+              <span class="icon">🤖</span>
+              <h3>Flackbot</h3>
+              <p>Reminders arrive in a DM with Snooze, new members get a welcome, and your own automatic answers to common questions.</p>
+            </article>
+            <article class="card">
+              <span class="icon">🎨</span>
+              <h3>Your brand</h3>
+              <p>Your workspace name, logo, colors and sign-in message, set by admins in a couple of clicks.</p>
+            </article>
           </div>
+        </div>
+      </section>
+
+      <!-- Ask Flackbot -->
+      <section id="ask" class="section ask">
+        <div class="wrap ask-inner">
+          <div>
+            <p class="kicker">New · Ask Flackbot</p>
+            <h2>Answers from <span class="grad">your team's own conversations.</span></h2>
+            <p>Ask “what did we decide about pricing?” or “what did I miss today?” in a pane next to your channels (full screen on phones). Flackbot searches and reads the messages, then answers in a few lines with links to its sources.</p>
+            <ul class="ticks">
+              <li><strong>Only sees what you can see.</strong> Its searches run as you, with the same checks as the app, and it can't post or change anything.</li>
+              <li><strong>Claude on Vertex AI in your own Google Cloud project.</strong> No API key and no extra vendor bill: a typical question costs 2–5¢.</li>
+              <li><strong>Off until an admin turns it on,</strong> with a daily limit per person and a monthly budget that pauses it.</li>
+            </ul>
+          </div>
+          <figure class="frame desktop wide">
+            <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span>your-team.web.app</span></div>
+            <picture>
+              <source srcset="assets/ask-desktop-dark.png" media="(prefers-color-scheme: dark)" />
+              <img src="assets/ask-desktop-light.png" alt="The Ask Flackbot pane answering a question about a channel, with links to four messages" width="1440" height="900" loading="lazy" />
+            </picture>
+          </figure>
         </div>
       </section>
 
@@ -145,7 +184,8 @@
           <div class="tabs" role="tablist" aria-label="Screens">
             <button role="tab" aria-selected="true" data-shot="thread" data-alt="A thread open next to its channel">Threads</button>
             <button role="tab" aria-selected="false" data-shot="search" data-alt="Search across channels, people and messages">Search</button>
-            <button role="tab" aria-selected="false" data-shot="activity" data-alt="Activity: mentions, replies and reminders">Activity</button>
+            <button role="tab" aria-selected="false" data-shot="activity" data-alt="Activity: mentions and replies">Activity</button>
+            <button role="tab" aria-selected="false" data-shot="flackbot" data-alt="The Flackbot DM: a welcome, a reminder with Snooze, and an answer with sources">Flackbot</button>
             <button role="tab" aria-selected="false" data-shot="admin" data-alt="Admin: invites and people">Admin</button>
           </div>
           <figure class="frame desktop wide">
@@ -204,6 +244,7 @@ cd flack</code><button class="copy" aria-label="Copy">Copy</button></pre>
             <p>
               The installer sets a <strong>budget alert</strong> (US$5/month by default) that emails you at 50%, 90%
               and 100%. The one line item you'll usually see is a few cents a month for storing function images.
+              Ask Flackbot is optional and billed per question (about 2–5¢ with Claude Sonnet 5.5), capped by a monthly budget you set.
             </p>
           </div>
           <div class="card meters" aria-label="Typical usage for a 25-person team versus free quotas">
@@ -254,6 +295,7 @@ cd flack</code><button class="copy" aria-label="Copy">Copy</button></pre>
           <details><summary>How many people can use it?</summary><p>It's built for teams of 10–100 people, and larger teams work too. Past a few hundred people, the repo's backlog describes how to trim the always-on listeners (presence and the member directory) to keep costs flat.</p></details>
           <details><summary>Can I use my own domain?</summary><p>Yes. Add a custom domain in Firebase Hosting and add it to the authorized domains for sign-in.</p></details>
           <details><summary>Is it a real app on phones?</summary><p>It's an installable PWA: add it to the home screen on iPhone or install it on Android for push notifications and a full-screen app.</p></details>
+          <details><summary>What does Ask Flackbot send to the AI?</summary><p>Only what it needs to answer: the question and the messages its searches find, all from channels the person asking can already read. It runs on Claude through Vertex AI in your own Google Cloud project, under Google Cloud's terms. It's off by default; turning it on needs a one-time "Enable" for the Claude model in Vertex AI Model Garden and some Vertex AI quota (the installer requests it).</p></details>
           <details><summary>How do I update?</summary><p>Run <code>npm run update</code> in your Flack folder. It pulls the latest version, turns on anything new it needs and deploys, keeping your settings. Admins see a note in the app when a new release is out.</p></details>
         </div>
       </section>

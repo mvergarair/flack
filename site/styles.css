@@ -399,6 +399,7 @@ h3 {
 }
 .steps .card {
   position: relative;
+  min-width: 0;
 }
 .num {
   display: inline-grid;
@@ -566,6 +567,57 @@ details p {
   flex-wrap: wrap;
 }
 
+/* Ask Flackbot */
+.ask {
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--accent) 6%, transparent) 40%, transparent);
+}
+.ask-inner {
+  display: grid;
+  grid-template-columns: 0.9fr 1.3fr;
+  gap: 56px;
+  align-items: center;
+}
+.ask-inner > div > p {
+  color: var(--ink-2);
+  max-width: 520px;
+}
+.ticks {
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 14px;
+  color: var(--ink-2);
+  max-width: 520px;
+}
+.ticks li {
+  position: relative;
+  padding-left: 30px;
+}
+.ticks li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--accent);
+}
+.ticks strong {
+  color: var(--ink);
+}
+@media (max-width: 960px) {
+  .ask-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Responsive */
 @media (max-width: 960px) {
   .features,
@@ -574,7 +626,7 @@ details p {
   }
   .steps,
   .cost-inner {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 @media (max-width: 640px) {

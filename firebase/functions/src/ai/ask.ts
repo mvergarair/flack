@@ -163,6 +163,9 @@ export function friendlyModelError(err: unknown): string {
   if (status === 403 || status === 404 || /not (been )?enabled|PERMISSION_DENIED|NOT_FOUND|not found/i.test(text)) {
     return "I can't reach Claude yet. An admin needs to enable the Claude model in Vertex AI Model Garden (People & invites → Flackbot has the link).";
   }
+  if (status === 429 && /quota exceeded/i.test(text) && /per_base_model|PerBaseModel/i.test(text)) {
+    return "I can't reach Claude yet: this project's Vertex AI quota for Claude is too low (new projects start at 0). An admin can request more in People & invites → Ask Flackbot.";
+  }
   if (status === 429) return "I'm getting too many questions right now. Try again in a minute.";
   return 'Something went wrong on my side. Try again in a moment.';
 }

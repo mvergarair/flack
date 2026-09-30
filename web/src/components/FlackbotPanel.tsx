@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useMe } from '../auth/AuthProvider';
 import { useWorkspace } from '../data/workspace';
@@ -70,6 +70,13 @@ export function FlackbotPanel({ variant, onClose }: Props) {
   useEffect(() => {
     input.current?.focus();
   }, [conversationId]);
+  // Grow with the text (wrapped lines included) up to about six lines, then scroll.
+  useLayoutEffect(() => {
+    const el = input.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.min(el.scrollHeight, 150)}px`;
+  }, [text]);
 
   const ask = async (question: string) => {
     const q = question.trim();
@@ -193,7 +200,7 @@ export function FlackbotPanel({ variant, onClose }: Props) {
               onKeyDown={onKeyDown}
               placeholder="Ask Flackbot…"
               aria-label="Ask Flackbot"
-              rows={Math.min(6, Math.max(1, text.split('\n').length))}
+              rows={1}
               maxLength={4000}
             />
             <button className={styles.send} onClick={() => void ask(text)} disabled={!text.trim() || waiting} aria-label="Ask">
