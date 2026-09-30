@@ -1,4 +1,5 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '../fixtures.ts';
+import type { Page } from '@playwright/test';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { asUser, emu, signIn, storageList, users, PNG } from '../helpers.ts';

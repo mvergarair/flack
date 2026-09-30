@@ -1,4 +1,5 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '../fixtures.ts';
+import type { Page } from '@playwright/test';
 import { emu, open, signIn, users, PASSWORD } from '../helpers.ts';
 
 const INVITE_TOKEN = 'seed-invite-token-0001';

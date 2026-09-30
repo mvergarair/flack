@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures.ts';
 import { emu, signIn, users } from '../helpers.ts';
 
 test.describe('health and anonymous statistics', () => {

@@ -7,6 +7,13 @@ a major version means you need to do something when updating, and the notes say 
 Shell: `cd flack && npm run update`). Your settings are kept. Admins also see an "update
 available" note on the People & invites page when a new release is out.
 
+## 1.7.3 (2026-09-30)
+
+- **Runaway-listener tripwire.** The app notices a database listener that keeps firing (20+ times
+  in 10 seconds), the signature of the bug fixed in 1.7.2, and logs which one. Every end-to-end
+  test now fails on it, and a new "idle screens" test sits on each main screen to catch it before
+  a release. For contributors: import `test`/`expect` from `e2e/fixtures.ts`.
+
 ## 1.7.2 (2026-09-30)
 
 - **Fixed runaway reads and writes from the Ask Flackbot pane.** While it was open it marked the

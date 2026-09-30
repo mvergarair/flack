@@ -1,4 +1,5 @@
-import { test, expect, type Browser } from '@playwright/test';
+import { test, expect } from '../fixtures.ts';
+import type { Browser } from '@playwright/test';
 import { emu, signIn, users } from '../helpers.ts';
 
 type Push = { uid: string; kind: string; title: string; body: string; link: string };

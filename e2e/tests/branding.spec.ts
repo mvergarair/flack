@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures.ts';
 import { asUser, emu, open, signIn, users, PNG } from '../helpers.ts';
 
 test.describe('workspace customization', () => {

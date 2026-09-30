@@ -35,7 +35,14 @@ and the README has the full picture.
 - **Local sign-in** uses the email/password form (emulators only, password `password123`).
   Production is Google-only, and `scripts/check-build.mjs` fails the build if emulator code leaks in.
 - **Firestore listeners** use `listenDoc` / `listenQuery` from `web/src/lib/snapshot.ts`, which
-  retry transient permission errors right after sign-in.
+  retry transient permission errors right after sign-in. They also feed a runaway-listener
+  tripwire (`web/src/lib/listenerWatch.ts`): a listener firing 20+ times in 10 seconds is logged,
+  and **every e2e test fails on it** (`e2e/fixtures.ts`; import `test`/`expect` from there).
+- **Effects that write must check first.** An effect that writes data it (indirectly) listens to
+  loops forever: it looks fine on screen and burns reads. Guard with a real condition (e.g. only
+  mark read when `isUnread`), never with object identities like `channelsById`, which change on
+  every snapshot. `e2e/tests/idle.spec.ts` sits on each main screen to catch this; add new
+  screens there.
 - **Cost:** keep reads bounded. Paginate (50), use count aggregations for badges, keep presence
   and typing in the Realtime Database, and never add an always-on listener over a whole collection.
 - **Releases:** bump `version` in the root `package.json` and add a `CHANGELOG.md` entry. New
