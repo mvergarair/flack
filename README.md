@@ -143,6 +143,12 @@ Admins get a **Health** card (People & invites) with yesterday's messages, activ
 database reads and writes against the free quota, function errors and latency, and page-load
 speed. It stays in your project.
 
+**Where do reads come from?** `scripts/read-audit.sh on` turns on Firestore Data Access audit
+logs and makes them queryable with SQL (Log Analytics, linked to BigQuery as `flack_logs`).
+`scripts/read-audit.sh report [hours]` then lists requests by person, operation and collection.
+Listeners are logged with their query but not their document count, so pair it with the
+Health card's totals. A small team stays inside the free logging tier; `off` stops it.
+
 Flack also sends its maintainers **one anonymous report a day**: version, size ranges, features
 in use, error counts and speed, **never messages, names, emails or anything anyone wrote**. It's
 on by default and easy to turn off (admin switch, `no` at install, or `FLACK_TELEMETRY=off`).

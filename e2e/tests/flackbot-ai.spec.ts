@@ -27,6 +27,14 @@ test.describe('Ask Flackbot', () => {
     await expect(answer).toContainText('finish the upload flow');
     await expect(answer.getByRole('list', { name: 'Sources' })).toContainText('#engineering · Mia Member');
 
+    // With the pane open, the Flackbot DM is marked read once, not over and over (each mark
+    // changes the workspace data the pane watches; an unguarded effect looped, costing reads).
+    const marker = () => emu.get<{ lastReadAt: { _seconds: number; _nanoseconds: number } }>('users/uMember/reads/dm_flackbot_uMember')?.lastReadAt;
+    await expect.poll(marker, { timeout: 10_000 }).toBeTruthy();
+    const first = JSON.stringify(marker());
+    await page.waitForTimeout(3000);
+    expect(JSON.stringify(marker())).toBe(first);
+
     // A source opens the message; the pane stays open next to it.
     await answer.getByRole('link', { name: /#engineering · Mia Member/ }).click();
     await expect(page).toHaveURL(/\/c\/cEngineering\?m=eng0/);
