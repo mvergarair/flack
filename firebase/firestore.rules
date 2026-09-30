@@ -75,12 +75,14 @@ service cloud.firestore {
     // ---------- config ----------
     match /config/{docId} {
       // Branding is public (the sign-in page shows it); the rest is for members.
-      allow read: if docId == 'branding' || (docId in ['telemetry', 'bot'] ? isAdmin() : isActive());
+      allow read: if docId == 'branding' || (docId in ['telemetry', 'bot', 'aiStatus'] ? isAdmin() : isActive());
       // Admins set the branding and switch anonymous statistics on or off; everything else is
       // written by Cloud Functions only.
       allow write: if docId == 'branding' && isAdmin() && validBranding(request.resource.data);
       // Flackbot's welcome message and auto-responses (functions re-validate every entry).
       allow write: if docId == 'bot' && isAdmin() && validBot(request.resource.data);
+      // Ask Flackbot: on/off, model and limits (everyone reads it to know whether it's on).
+      allow write: if docId == 'ai' && isAdmin() && validAi(request.resource.data);
       allow update: if docId == 'telemetry' && isAdmin()
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['enabled', 'noticeSeen'])
         && request.resource.data.enabled is bool
@@ -94,6 +96,24 @@ service cloud.firestore {
     match /stats/{docId} {
       allow read: if isAdmin();
       allow write: if false;
+    }
+    // Ask Flackbot usage per month and per person (written by functions; admins read).
+    match /aiUsage/{month}/{rest=**} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+    match /aiUsage/{month} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+    function validAi(d) {
+      return d.keys().hasOnly(['enabled', 'model', 'dailyLimit', 'monthlyBudgetUsd', 'updatedAt', 'updatedBy'])
+        && d.enabled is bool
+        && d.model in ['claude-sonnet-5-5', 'claude-opus-5-5', 'claude-haiku-4-5']
+        && d.dailyLimit is int && d.dailyLimit >= 1 && d.dailyLimit <= 500
+        && d.monthlyBudgetUsd is int && d.monthlyBudgetUsd >= 0 && d.monthlyBudgetUsd <= 10000
+        && d.updatedAt == request.time
+        && d.updatedBy == request.auth.uid;
     }
     function validBot(d) {
       return d.keys().hasOnly(['welcome', 'responses', 'updatedAt', 'updatedBy'])

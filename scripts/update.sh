@@ -51,6 +51,10 @@ main() {
   else
     warn "Couldn't check services (your login may not be allowed to); continuing."
   fi
+  # Permissions new features need (safe to re-run).
+  if ! "$ROOT/scripts/prod-setup.sh" >/dev/null 2>&1; then
+    warn "Couldn't update project permissions (your login may not be allowed to); continuing."
+  fi
 
   step "Deploying"
   "$ROOT/scripts/deploy.sh"

@@ -36,6 +36,12 @@
           ".validate": "$device.length <= 40 && newData.isString() && newData.val().length <= 200"
         }
       }
+    },
+    "botDrafts": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid && auth.token.active === true",
+        ".write": false
+      }
     }
   }
 }

@@ -26,4 +26,8 @@ EOF
 "$G" projects add-iam-policy-binding "$FLACK_PROJECT" \
   --member="serviceAccount:service-$NUM@gcp-sa-firebasestorage.iam.gserviceaccount.com" \
   --role="roles/firebaserules.firestoreServiceAgent" --condition=None --quiet >/dev/null
+# 3. Ask Flackbot calls Claude through Vertex AI as the functions' runtime service account.
+"$G" projects add-iam-policy-binding "$FLACK_PROJECT" \
+  --member="serviceAccount:$NUM-compute@developer.gserviceaccount.com" \
+  --role="roles/aiplatform.user" --condition=None --quiet >/dev/null
 echo "prod setup done"

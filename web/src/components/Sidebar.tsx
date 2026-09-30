@@ -11,13 +11,17 @@ import { UserMenu } from './UserMenu';
 import { NotificationPrompt } from './NotificationPrompt';
 import { StatusEmoji } from './StatusEmoji';
 import { ChannelDialogs, type ChannelDialog } from './ChannelDialogs';
-import { ComposeIcon, HashIcon, LockIcon, PlusIcon, ShieldIcon, BellIcon, BellOffIcon, BookmarkIcon, SearchIcon } from './icons';
+import { ComposeIcon, HashIcon, LockIcon, PlusIcon, ShieldIcon, BellIcon, BellOffIcon, BookmarkIcon, SearchIcon, SparkleIcon } from './icons';
+import { useAiSettings } from '../data/ai';
+import { useFlackbotPane } from '../app/flackbotPane';
 import { useBranding } from '../data/branding';
 import { BrandLogo } from './BrandLogo';
 import styles from './Sidebar.module.css';
 
 export function Sidebar() {
   const me = useMe();
+  const ai = useAiSettings();
+  const pane = useFlackbotPane();
   const { channels, users, reads, presence, prefs, manualReads } = useWorkspace();
   const navigate = useNavigate();
   const [dialog, setDialog] = useState<ChannelDialog>(null);
@@ -63,6 +67,14 @@ export function Sidebar() {
             {/Mac|iPhone|iPad/.test(navigator.platform) ? '⌘K' : 'Ctrl K'}
           </kbd>
         </NavLink>
+        {(ai?.enabled || me.role === 'admin') && (
+          <button className={`${styles.item} ${pane.open ? styles.active : ''}`} onClick={pane.toggle} aria-pressed={pane.open} data-testid="ask-flackbot">
+            <span className={styles.icon}>
+              <SparkleIcon size={16} />
+            </span>
+            <span className={styles.label}>Ask Flackbot</span>
+          </button>
+        )}
         <NavLink to="/later" className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}>
           <span className={styles.icon}>
             <BookmarkIcon size={16} />

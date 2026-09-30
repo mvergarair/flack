@@ -7,6 +7,27 @@ a major version means you need to do something when updating, and the notes say 
 Shell: `cd flack && npm run update`). Your settings are kept. Admins also see an "update
 available" note on the People & invites page when a new release is out.
 
+## 1.7.0 (2026-09-29)
+
+- **Ask Flackbot (optional AI).** Ask about anything your team has discussed ("what did I miss
+  today?", "what was decided about pricing?") and get a short answer with links to the messages
+  it's based on.
+  - **Desktop:** a pane on the right (Ask Flackbot in the sidebar) that stays open while you
+    browse. **Phones:** a full-screen page from the ✦ button at the top. Questions typed in the
+    Flackbot DM get answers too.
+  - **It only sees what you can see:** its searches and reads run as you, with the same checks as
+    the app. It can't post or change anything.
+  - **Claude on Vertex AI in your own Google Cloud project,** billed with the rest of Flack; no
+    API key. Claude Sonnet 5.5 by default (a typical question costs 2–5¢); admins can pick
+    Claude Haiku 4.5 or Claude Opus 5.5.
+  - **Off until an admin turns it on** (People & invites → Ask Flackbot), with a per-person daily
+    limit (30) and a monthly budget (US$20) that pauses it when reached. This month's usage and
+    cost are shown there.
+  - **Setup:** the installer (and `npm run update`) turns on Vertex AI and gives Flack's functions
+    permission to use it. One step is yours: enable the Claude model in Vertex AI Model Garden,
+    which asks you to accept Anthropic's terms. The admin page links to it and can check the
+    connection.
+
 ## 1.6.0 (2026-09-29)
 
 - **Flackbot.** A built-in bot with its own DM for everyone:

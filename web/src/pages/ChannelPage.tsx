@@ -18,6 +18,8 @@ import { PinnedBar } from '../components/PinnedBar';
 import { Avatar } from '../components/Avatar';
 import { usePageTitle } from '../data/branding';
 import type { Channel } from '../data/types';
+import { useBotDraft } from '../data/ai';
+import { BOT_ID } from '../lib/bot';
 import styles from './ChannelPage.module.css';
 
 export function ChannelPage() {
@@ -97,6 +99,8 @@ function ChannelMain({ channel }: { channel: Channel }) {
 
   const title = channelTitle(channel, me.id, users);
   const isDm = channel.type === 'dm';
+  const draft = useBotDraft(me.id);
+  const botDraft = channel.memberIds.includes(BOT_ID) ? draft : null;
   const others = isDm ? dmOthers(channel, me.id) : [];
   const intro = (
     <div className={styles.intro}>
@@ -146,7 +150,7 @@ function ChannelMain({ channel }: { channel: Channel }) {
           newSince={newSince}
         />
       )}
-      <TypingIndicator channelId={typingKey(channel)} />
+      <TypingIndicator channelId={typingKey(channel)} status={botDraft ? `Flackbot: ${botDraft.status}…` : null} />
       <Composer key={channel.id} channel={channel} placeholder={isDm ? `Message ${title}` : `Message #${channel.name}`} autoFocus lastOwnMessageId={lastOwnMessageId} />
     </main>
   );

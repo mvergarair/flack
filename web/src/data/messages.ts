@@ -36,7 +36,7 @@ let orFeedUnavailable = false;
 const channelFeedFilter = () =>
   orFeedUnavailable ? and(where('threadParentId', '==', null)) : or(where('threadParentId', '==', null), where('alsoToChannel', '==', true));
 
-const toMessage = (d: QueryDocumentSnapshot | DocumentSnapshot): Message => {
+export const toMessage = (d: QueryDocumentSnapshot | DocumentSnapshot): Message => {
   const data = d.data({ serverTimestamps: 'estimate' })!;
   return {
     id: d.id,
@@ -56,6 +56,7 @@ const toMessage = (d: QueryDocumentSnapshot | DocumentSnapshot): Message => {
     alsoToChannel: data.alsoToChannel ?? false,
     linkPreviews: data.linkPreviews ?? [],
     ...(data.botRef ? { botRef: data.botRef } : {}),
+    ...(data.ai ? { ai: data.ai } : {}),
   };
 };
 

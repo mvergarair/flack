@@ -1,12 +1,14 @@
 import { useWorkspace } from '../data/workspace';
 import { useTypingUsers } from '../data/typing';
 
-export function TypingIndicator({ channelId, testId = 'typing' }: { channelId: string | null; testId?: string }) {
+/** `status` replaces the typing line (Flackbot's progress in its DM). */
+export function TypingIndicator({ channelId, testId = 'typing', status }: { channelId: string | null; testId?: string; status?: string | null }) {
   const { users } = useWorkspace();
   const ids = useTypingUsers(channelId);
   const names = ids.map((id) => users.get(id)?.displayName ?? 'Someone');
-  const text =
-    names.length === 0
+  const text = status
+    ? status
+    : names.length === 0
       ? ''
       : names.length === 1
         ? `${names[0]} is typing…`

@@ -11,6 +11,8 @@ import { MobileNav } from '../components/MobileNav';
 import { usePresence } from '../data/presence';
 import { useHotkeys } from '../data/hotkeys';
 import { useEnsureFlackbot } from '../data/bot';
+import { FlackbotPanel } from '../components/FlackbotPanel';
+import { FlackbotPaneProvider, useFlackbotPane } from './flackbotPane';
 import { ProfileCardHost } from '../components/ProfileCard';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -21,12 +23,21 @@ import styles from './Shell.module.css';
  * Mobile: one routed pane; the bottom nav shows on the top-level tabs only.
  */
 export function Shell() {
+  return (
+    <FlackbotPaneProvider>
+      <ShellInner />
+    </FlackbotPaneProvider>
+  );
+}
+
+function ShellInner() {
   const mobile = useIsMobile();
   const { user, profile } = useAuth();
   const { ready } = useWorkspace();
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [toast, setToast] = useState<PushData | null>(null);
+  const pane = useFlackbotPane();
   usePresence();
   useEffect(startPageLoadReporting, []);
   useHotkeys();
@@ -78,6 +89,7 @@ export function Shell() {
           </div>
         )}
       </div>
+      {!mobile && ready && pane.open && <FlackbotPanel variant="pane" onClose={() => pane.setOpen(false)} />}
       {mobile && topLevel && <MobileNav />}
       <ProfileCardHost />
       {toast && (

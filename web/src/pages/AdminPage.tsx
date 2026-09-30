@@ -20,6 +20,7 @@ import { PlusIcon, SettingsIcon } from '../components/icons';
 import { WorkspaceSettings } from '../components/WorkspaceSettings';
 import { HealthCard } from '../components/HealthCard';
 import { FlackbotCard } from '../components/FlackbotCard';
+import { AskFlackbotCard } from '../components/AskFlackbotCard';
 import { TelemetryCard, TelemetryNotice } from '../components/TelemetryCard';
 import { usePageTitle } from '../data/branding';
 import styles from './AdminPage.module.css';
@@ -208,6 +209,7 @@ export function AdminPage() {
           </section>
           <HealthCard />
           <FlackbotCard />
+          <AskFlackbotCard />
           <TelemetryCard />
           <p className={styles.version} data-testid="flack-version">
             Flack {FLACK_VERSION}

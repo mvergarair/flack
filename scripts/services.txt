@@ -21,3 +21,4 @@ cloudresourcemanager.googleapis.com
 secretmanager.googleapis.com
 monitoring.googleapis.com
 clouderrorreporting.googleapis.com
+aiplatform.googleapis.com

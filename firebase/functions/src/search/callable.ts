@@ -16,6 +16,8 @@ export interface SearchInput {
   hasFile?: boolean;
   after?: number; // ms
   before?: number; // ms (also the pagination cursor)
+  /** Channels to leave out (Ask Flackbot skips its own DM). */
+  excludeChannelIds?: string[];
 }
 
 const chunk = <T>(xs: T[], n: number) => Array.from({ length: Math.ceil(xs.length / n) }, (_, i) => xs.slice(i * n, i * n + n));
@@ -38,7 +40,8 @@ export async function searchAs(uid: string, input: SearchInput) {
   const { lookup, words: qWords } = queryTerms(String(input.q ?? '').slice(0, 200));
   if (!lookup.length) throw new HttpsError('invalid-argument', 'Type at least one word to search for.');
 
-  const mine = (await db.collection('channels').where('memberIds', 'array-contains', uid).select().get()).docs.map((d) => d.id);
+  const skip = new Set(input.excludeChannelIds ?? []);
+  const mine = (await db.collection('channels').where('memberIds', 'array-contains', uid).select().get()).docs.map((d) => d.id).filter((id) => !skip.has(id));
   let channelIds = mine;
   if (input.channelId) {
     if (!mine.includes(input.channelId)) throw new HttpsError('permission-denied', "You're not a member of that channel.");
