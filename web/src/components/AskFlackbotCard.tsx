@@ -6,7 +6,11 @@ import { friendlyError } from '../lib/errors';
 import { SparkleIcon } from './icons';
 import styles from './FlackbotCard.module.css';
 
-const modelGarden = (model: string) => `https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/${model}?project=${app.options.projectId ?? ''}`;
+/** The Model Garden page for a model; the URL is built only from our own list of model ids. */
+const modelGarden = (model: string) => {
+  const id = AI_MODELS.find((m) => m.id === model)?.id ?? AI_DEFAULTS.model;
+  return `https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/${id}?project=${encodeURIComponent(app.options.projectId ?? '')}`;
+};
 
 /** Admins: turn Ask Flackbot on, pick the model and set limits; see this month's cost. */
 export function AskFlackbotCard() {
