@@ -92,7 +92,8 @@ jobs:
   e2e:
     name: End to end (${{ matrix.name }})
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    # No job-level `if`: a skipped matrix job reports as "End to end (${{ matrix.name }})", never
+    # under the names branch protection requires. For docs-only changes the steps skip instead.
     runs-on: ubuntu-latest
     timeout-minutes: 40
     strategy:
@@ -107,25 +108,33 @@ jobs:
             browsers: chromium webkit
     steps:
       - uses: actions/checkout@v4
+        if: needs.changes.outputs.code == 'true'
       - uses: actions/setup-node@v4
+        if: needs.changes.outputs.code == 'true'
         with:
           node-version: 22
           cache: npm
       - uses: actions/setup-java@v4
+        if: needs.changes.outputs.code == 'true'
         with:
           distribution: temurin
           java-version: 21
       - uses: actions/cache@v4
+        if: needs.changes.outputs.code == 'true'
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-${{ hashFiles('package-lock.json') }}
       - run: npm ci
+        if: needs.changes.outputs.code == 'true'
       - run: npx playwright install --with-deps ${{ matrix.browsers }}
+        if: needs.changes.outputs.code == 'true'
       - run: npm run build -w firebase/functions
+        if: needs.changes.outputs.code == 'true'
       - name: Playwright
+        if: needs.changes.outputs.code == 'true'
         run: scripts/fb.sh emulators:exec --project demo-flack --only auth,firestore,database,storage,functions,pubsub "cd e2e && npx playwright test ${{ matrix.projects }}"
       - name: Upload the Playwright report
-        if: failure()
+        if: failure() && needs.changes.outputs.code == 'true'
         uses: actions/upload-artifact@v7
         with:
           name: playwright-${{ matrix.browsers == 'chromium' && 'chromium' || 'webkit-phones' }}
