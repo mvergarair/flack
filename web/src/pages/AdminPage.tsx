@@ -19,6 +19,7 @@ import { MobileHeader } from './MobileHome';
 import { PlusIcon, SettingsIcon } from '../components/icons';
 import { WorkspaceSettings } from '../components/WorkspaceSettings';
 import { HealthCard } from '../components/HealthCard';
+import { FlackbotCard } from '../components/FlackbotCard';
 import { TelemetryCard, TelemetryNotice } from '../components/TelemetryCard';
 import { usePageTitle } from '../data/branding';
 import styles from './AdminPage.module.css';
@@ -50,6 +51,7 @@ export function AdminPage() {
   const people = useMemo(() => {
     const term = filter.trim().toLowerCase();
     return [...users.values()]
+      .filter((u) => !u.bot)
       .filter((u) => !term || u.displayName.toLowerCase().includes(term) || u.email.toLowerCase().includes(term))
       .sort((a, b) => (a.status === b.status ? a.displayName.localeCompare(b.displayName) : a.status === 'active' ? -1 : 1));
   }, [users, filter]);
@@ -205,6 +207,7 @@ export function AdminPage() {
             </ul>
           </section>
           <HealthCard />
+          <FlackbotCard />
           <TelemetryCard />
           <p className={styles.version} data-testid="flack-version">
             Flack {FLACK_VERSION}

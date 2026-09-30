@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { useMe } from '../auth/AuthProvider';
 import { presenceDot, useWorkspace } from '../data/workspace';
 import { openDm } from '../lib/dm';
+import { openFlackbot } from '../data/bot';
 import { activeStatus, untilLabel } from '../lib/status';
 import { isDndActive } from '../lib/dnd';
 import { lastOnlineLabel } from '../lib/time';
@@ -98,13 +99,26 @@ function ProfileCard({ uid, onClose }: { uid: string; onClose: () => void }) {
             </dd>
           </div>
         )}
-        <div>
-          <dt>Email</dt>
-          <dd>
-            <a href={`mailto:${user.email}`}>{user.email}</a>
-          </dd>
-        </div>
+        {user.email && (
+          <div>
+            <dt>Email</dt>
+            <dd>
+              <a href={`mailto:${user.email}`}>{user.email}</a>
+            </dd>
+          </div>
+        )}
       </dl>
+      {user.bot && (
+        <button
+          className="btn btn-primary btn-lg"
+          onClick={async () => {
+            onClose();
+            navigate(`/c/${await openFlackbot()}`);
+          }}
+        >
+          Open Flackbot
+        </button>
+      )}
       {!isMe && user.status === 'active' && (
         <button
           className="btn btn-primary btn-lg"

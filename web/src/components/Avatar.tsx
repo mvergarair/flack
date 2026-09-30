@@ -1,5 +1,6 @@
 import type { UserProfile } from '../data/types';
 import styles from './Avatar.module.css';
+import { Logo } from './icons';
 
 const PALETTE = ['#9A4A24', '#2E6A4F', '#5B4A9E', '#1F5FC4', '#7A5C1E', '#8B3A62', '#2F6B7A', '#6B5B3A'];
 
@@ -27,6 +28,14 @@ export function Avatar({ user, size = 36, online, ring = 'var(--surface)' }: Pro
   const name = user?.displayName ?? '?';
   const radius = Math.round(size * 0.22);
   const dot = Math.max(8, Math.round(size * 0.32));
+  if (user?.bot) {
+    // Flackbot: the Flack mark, and no presence dot.
+    return (
+      <span className={styles.avatar} style={{ width: size, height: size, borderRadius: radius, background: 'transparent' }} aria-hidden="true" data-bot>
+        <Logo size={size} />
+      </span>
+    );
+  }
   return (
     <span
       className={styles.avatar}

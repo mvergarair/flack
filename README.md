@@ -37,6 +37,7 @@
 - **Conversations:** public and private channels, 1:1 and group DMs, threads (with “also send to channel”), @mentions, `@here` and `@channel`.
 - **Finding things:** ⌘K search across channels, people and messages, with filters by person, channel, date or files.
 - **Later:** saved messages, `/remind me in 1h to …`, scheduled messages (`/schedule tomorrow 9am …`), snooze.
+- **Flackbot:** your reminders and notices arrive in a DM from Flackbot, which also welcomes new members and answers common questions ("wifi password") with replies admins set up.
 - **Notifications:** web push on desktop, Android and iPhone home-screen apps; per-channel levels; Do Not Disturb with schedules.
 - **The small things:** reactions with your own quick picks, pins, mark unread, edit with ↑, typing indicators, online/away/last seen, custom status, profile cards with local time, link previews, file uploads up to 50 MB.
 - **Admin:** invite-only (Google sign-in), invite links, roles, deactivate anyone instantly.
@@ -239,6 +240,7 @@ otherwise they use the repo-local `firebase login` from `npm run setup`.
 
 - **Notifications:** `onmessagecreated` works out who to tell (DM members, mentions, thread participants, channel subscribers), writes Activity items and sends data-only web pushes. It skips people who are looking at the conversation or have Do Not Disturb on.
 - **Scheduled messages and reminders:** `sendscheduled` runs every 10 minutes, and the app only offers times on that grid. Messages go out as the author through the normal pipeline. Membership is re-checked at send time; anything that can no longer be sent shows as *Not sent* under Later.
+- **Flackbot:** a built-in author (`flackbot`), not a user account. Functions post as it: reminders and failed-schedule notices go to each person's `dm_…_flackbot` DM (created with a welcome message the first time), and `onmessagecreated` checks new messages against the admins' automatic answers in `config/bot`. Those settings are cached in memory for five minutes, so ordinary messages cost no extra reads. The rules stop clients from adding Flackbot to channels or posting as it.
 - **Search:** each message gets a separate index doc of accent-free words and word beginnings. Queries go through a callable that only searches channels you belong to.
 
 ## Contributing

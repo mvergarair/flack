@@ -171,6 +171,11 @@ function MessageItemInner({ message, channel, compact, inThread, highlighted }: 
             </button>
             <StatusEmoji user={author} />
             {author?.status === 'deactivated' && <span className={styles.tag}>deactivated</span>}
+            {author?.bot && (
+              <span className={styles.tag} data-testid="bot-tag">
+                bot
+              </span>
+            )}
             <time className={styles.time} dateTime={message.createdAt?.toDate().toISOString()} title={message.createdAt?.toDate().toLocaleString()}>
               {formatTime(message.createdAt)}
             </time>
@@ -218,6 +223,7 @@ function MessageItemInner({ message, channel, compact, inThread, highlighted }: 
               </div>
             )}
             {message.attachments.length > 0 && <Attachments attachments={message.attachments} />}
+            {message.botRef && <BotRefBar botRef={message.botRef} />}
             {!!message.linkPreviews?.length && (
               <div className={styles.previews}>
                 {message.linkPreviews.map((p) => (
@@ -412,3 +418,60 @@ function MessageItemInner({ message, channel, compact, inThread, highlighted }: 
 }
 
 export const MessageItem = memo(MessageItemInner);
+
+/**
+ * Under a Flackbot notice: a link to the message a reminder is about (or to the scheduled list),
+ * and Snooze for reminders.
+ */
+function BotRefBar({ botRef }: { botRef: NonNullable<Message['botRef']> }) {
+  const me = useMe();
+  const [snoozing, setSnoozing] = useState(false);
+  const [note, setNote] = useState<string | null>(null);
+  let to: string | null = null;
+  let label = '';
+  if (botRef.kind === 'reminder' && botRef.channelId && botRef.messageId) {
+    to = botRef.threadParentId ? `/c/${botRef.channelId}/t/${botRef.threadParentId}` : `/c/${botRef.channelId}?m=${botRef.messageId}`;
+    label = 'View message';
+  } else if (botRef.kind === 'schedule-failed') {
+    to = '/later?tab=scheduled';
+    label = 'Open scheduled messages';
+  }
+  const canSnooze = botRef.kind === 'reminder' && !!botRef.text;
+  if (!to && !canSnooze) return null;
+  const snooze = async (at: number) => {
+    await scheduleReminder(me.id, { text: botRef.text!, at, channelId: botRef.channelId, messageId: botRef.messageId, threadParentId: botRef.threadParentId });
+    setNote(`Snoozed until ${new Date(at).toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit' })}.`);
+  };
+  return (
+    <div className={styles.botBar} data-testid="bot-bar">
+      {to && (
+        <Link to={to} className={styles.botLink} data-testid="bot-link">
+          {label} →
+        </Link>
+      )}
+      {canSnooze && (
+        <span className={styles.botSnooze}>
+          <button className={styles.botLink} onClick={() => setSnoozing(true)}>
+            Snooze
+          </button>
+          {snoozing && (
+            <SchedulePicker
+              title="Remind me again"
+              presets={reminderPresets().slice(0, 4)}
+              confirmLabel="Snooze"
+              placement="below"
+              align="left"
+              onPick={(at) => snooze(at).catch((err) => setNote(friendlyError(err)))}
+              onClose={() => setSnoozing(false)}
+            />
+          )}
+        </span>
+      )}
+      {note && (
+        <span className={styles.botNote} role="status">
+          {note}
+        </span>
+      )}
+    </div>
+  );
+}

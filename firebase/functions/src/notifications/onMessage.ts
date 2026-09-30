@@ -9,6 +9,8 @@ import { unfurlMessage } from '../unfurl/unfurl.js';
 import { indexMessage } from '../search/index.js';
 import { isDndActive } from '../lib/dnd.js';
 import { aggregatePresence, withViewing, type AggregatedPresence } from '../lib/presence.js';
+import { answerMessage } from '../bot/bot.js';
+import { BOT_ID } from '../bot/rules.js';
 import { isActivityKind, notificationBody, notificationTargets, notificationTitle, pushRecipients, type NotifyKind } from './recipients.js';
 
 type Presence = AggregatedPresence;
@@ -34,6 +36,11 @@ export const onmessagecreated = onDocumentCreated({ document: 'channels/{channel
   const channelSnap = await db.doc(`channels/${channelId}`).get();
   if (!channelSnap.exists) return void (await unfurl);
   const channel = channelSnap.data() as ChannelDoc;
+  // Flackbot's auto-responses (and help in its DM) run alongside too.
+  const bot = answerMessage(channelId, messageId, msg, channel).catch((err) => logger.error('Flackbot failed', { messageId, err: String(err) }));
+  const background = Promise.all([unfurl, bot]);
+  // Flackbot's welcome is waiting in the DM (unread); it isn't worth a notification.
+  if (msg.authorId === BOT_ID && msg.botRef?.kind === 'welcome') return void (await background);
 
   let thread: { parentAuthorId: string; replyUserIds: string[] } | null = null;
   if (msg.threadParentId) {
@@ -110,9 +117,9 @@ export const onmessagecreated = onDocumentCreated({ document: 'channels/{channel
     online,
     allSubscribers,
   });
-  if (targets.size === 0) return void (await unfurl);
+  if (targets.size === 0) return void (await background);
 
-  const author = users.get(msg.authorId)?.displayName ?? 'Someone';
+  const author = msg.authorId === BOT_ID ? 'Flackbot' : (users.get(msg.authorId)?.displayName ?? 'Someone');
   const names = new Map([...users].map(([id, u]) => [id, u.displayName]));
   // Mention names for people outside the candidate set are resolved lazily.
   const missing = mentions.filter((id) => !id.startsWith('!') && !names.has(id));
@@ -145,7 +152,7 @@ export const onmessagecreated = onDocumentCreated({ document: 'channels/{channel
     if (u && isDndActive(u.dnd, u.timeZone)) muted.add(uid);
   }
   await sendPushes({ targets: new Map(pushRecipients(targets, muted)), channelId, messageId, threadParentId: msg.threadParentId ?? null, channel, author, body, presence });
-  await unfurl;
+  await background;
 });
 
 async function sendPushes(p: {

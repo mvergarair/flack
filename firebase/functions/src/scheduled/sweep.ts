@@ -1,14 +1,12 @@
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
-import { FieldValue, Timestamp } from 'firebase-admin/firestore';
+import { Timestamp } from 'firebase-admin/firestore';
 import { db } from '../lib/admin.js';
-import { isDndActive } from '../lib/dnd.js';
-import { sendPush } from '../lib/push.js';
+import { dmFromBot, dmFromBotInTx } from '../bot/bot.js';
 import type { ChannelDoc, MessageDoc, ScheduledDoc, UserDoc } from '../lib/types.js';
 import { notificationBody } from '../notifications/recipients.js';
 import { cannotSend } from './checks.js';
 import { mentionNames, writeMessage } from '../lib/post.js';
-import { expireAt } from '../lib/ttl.js';
 
 /**
  * Every 10 minutes: post due scheduled messages and fire due reminders. The app only offers
@@ -91,51 +89,44 @@ async function postMessage(uid: string, ref: FirebaseFirestore.DocumentReference
 
   if (result === 'failed' && failure) {
     const { reason, d } = failure as { reason: string; d: ScheduledDoc };
-    // Tell the author (Activity + push); the item stays under Later → Scheduled to retry.
-    await db.doc(`users/${uid}/activity/sf_${ref.id}`).set({
-      kind: 'schedule-failed',
-      channelId: d.channelId,
-      messageId: null,
-      threadParentId: d.threadParentId ?? null,
-      authorId: uid,
-      preview: notificationBody(d.text, names, 0, 200),
-      error: reason,
-      createdAt: FieldValue.serverTimestamp(),
-      expireAt: expireAt(),
+    // Tell the author in their Flackbot DM; the item stays under Later → Scheduled to retry.
+    const where = await describeChannel(d.channelId);
+    await dmFromBot(uid, {
+      text: `⚠️ Your scheduled message ${where} couldn't be sent: ${reason}\n\n> ${notificationBody(d.text, names, 0, 300)}\n\nIt's saved under Later → Scheduled, where you can edit it or send it again.`,
+      extra: { botRef: { kind: 'schedule-failed' } },
     });
-    await sendPush(uid, { kind: 'schedule-failed', title: 'Scheduled message not sent', body: reason, path: '/later?tab=scheduled', tag: `sf_${ref.id}` });
   }
   return result;
 }
 
 async function fireReminder(uid: string, ref: FirebaseFirestore.DocumentReference): Promise<'reminded' | null> {
+  // The reminder arrives as a message in the person's Flackbot DM; the normal message pipeline
+  // then notifies them (and respects Do Not Disturb). The message id is derived from this
+  // item's id, so a retry can't remind twice.
   const fired = await db.runTransaction(async (tx) => {
     const snap = await tx.get(ref);
-    if (!snap.exists) return null;
+    if (!snap.exists) return false;
     const d = snap.data() as ScheduledDoc;
-    if (d.status !== 'pending') return null;
+    if (d.status !== 'pending') return false;
     const user = (await tx.get(db.doc(`users/${uid}`))).data() as UserDoc | undefined;
+    if (user?.status === 'active') {
+      const about = d.channelId && d.messageId ? { channelId: d.channelId, messageId: d.messageId, threadParentId: d.threadParentId ?? null } : null;
+      await dmFromBotInTx(tx, uid, {
+        text: `⏰ Reminder: ${d.text.slice(0, 1000)}`,
+        messageId: `r_${ref.id}`,
+        extra: { botRef: { kind: 'reminder', text: d.text.slice(0, 500), ...(about ?? {}) } },
+      });
+    }
     tx.delete(ref);
-    if (user?.status !== 'active') return null;
-    tx.set(db.doc(`users/${uid}/activity/r_${ref.id}`), {
-      kind: 'reminder',
-      channelId: d.channelId ?? null,
-      messageId: d.messageId ?? null,
-      threadParentId: d.threadParentId ?? null,
-      authorId: uid,
-      preview: d.text.slice(0, 500),
-      createdAt: FieldValue.serverTimestamp(),
-      expireAt: expireAt(),
-    });
-    return { d, user };
+    return user?.status === 'active';
   });
-  if (!fired) return null;
+  return fired ? 'reminded' : null;
+}
 
-  const { d, user } = fired;
-  const u = user as UserDoc & { dnd?: Parameters<typeof isDndActive>[0]; timeZone?: string };
-  if (!isDndActive(u.dnd, u.timeZone)) {
-    const path = d.channelId && d.messageId ? (d.threadParentId ? `/c/${d.channelId}/t/${d.threadParentId}` : `/c/${d.channelId}?m=${d.messageId}`) : '/activity';
-    await sendPush(uid, { kind: 'reminder', title: '⏰ Reminder', body: d.text.slice(0, 180), path, channelId: d.channelId ?? undefined, tag: `r_${ref.id}` });
-  }
-  return 'reminded';
+/** "in #general", "in a direct message", or "" when the channel is gone. */
+async function describeChannel(channelId: string | null): Promise<string> {
+  if (!channelId) return '';
+  const c = (await db.doc(`channels/${channelId}`).get()).data() as ChannelDoc | undefined;
+  if (!c) return '';
+  return c.type === 'dm' ? 'in a direct message' : `in #${c.name}`;
 }

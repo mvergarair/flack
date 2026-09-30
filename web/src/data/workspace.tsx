@@ -6,6 +6,7 @@ import { db, rtdb } from '../firebase';
 import { useAuth } from '../auth/AuthProvider';
 import type { Channel, NotifyLevel, SavedItem, ScheduledItem, UserProfile } from './types';
 
+import { BOT_ID, FLACKBOT } from '../lib/bot';
 import { aggregatePresence, type AggregatedPresence } from '../lib/presence-aggregate';
 
 /** One person's presence, combined across their devices. */
@@ -52,7 +53,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     if (!uid) return;
     const unsubs = [
       listenQuery(collection(db, 'users'), (snap) => {
-        setUsers(new Map(snap.docs.map((d) => [d.id, { id: d.id, ...d.data() } as UserProfile])));
+        setUsers(new Map([...snap.docs.map((d) => [d.id, { id: d.id, ...d.data() } as UserProfile] as const), [BOT_ID, FLACKBOT] as const]));
         setUsersReady(true);
       }),
       listenQuery(query(collection(db, 'channels'), where('memberIds', 'array-contains', uid)), (snap) => {

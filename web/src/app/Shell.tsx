@@ -10,6 +10,7 @@ import { Sidebar } from '../components/Sidebar';
 import { MobileNav } from '../components/MobileNav';
 import { usePresence } from '../data/presence';
 import { useHotkeys } from '../data/hotkeys';
+import { useEnsureFlackbot } from '../data/bot';
 import { ProfileCardHost } from '../components/ProfileCard';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -29,6 +30,7 @@ export function Shell() {
   usePresence();
   useEffect(startPageLoadReporting, []);
   useHotkeys();
+  useEnsureFlackbot();
 
   // Record my time zone (local time on profile cards, DND schedules).
   useEffect(() => {

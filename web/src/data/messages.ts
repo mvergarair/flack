@@ -55,6 +55,7 @@ const toMessage = (d: QueryDocumentSnapshot | DocumentSnapshot): Message => {
     reactions: data.reactions ?? {},
     alsoToChannel: data.alsoToChannel ?? false,
     linkPreviews: data.linkPreviews ?? [],
+    ...(data.botRef ? { botRef: data.botRef } : {}),
   };
 };
 
@@ -113,7 +114,8 @@ export function useChannelMessages(channelId: string, enabled = true) {
           }
           return next;
         });
-        liveOldest.current = snap.docs[snap.docs.length - 1] ?? null;
+        // Page from a message the server has confirmed: one still sending has no timestamp yet.
+        liveOldest.current = snap.docs.filter((d) => !d.metadata.hasPendingWrites).at(-1) ?? null;
         if (!oldestCursor.current) oldestCursor.current = liveOldest.current;
         if (snap.docs.length < PAGE_SIZE && !oldestCursor.current) setHasMore(false);
         // A cached result is final when offline; otherwise wait for the server's answer

@@ -115,9 +115,11 @@ test.describe('scheduled messages', () => {
     emu.set('channels/cRandom', { archived: true });
     emu.runScheduled({ backdate: true });
 
-    await page.getByRole('link', { name: 'Activity' }).first().click();
-    await expect(page.getByTestId('activity-list')).toContainText("wasn't sent: The channel was archived.");
-    await page.getByTestId('activity-list').getByRole('link', { name: /wasn't sent/ }).click();
+    // Flackbot tells the author in their DM, with a link to the scheduled list.
+    await page.goto('/c/dm_flackbot_uMember');
+    const notice = channelMsgs(page).filter({ hasText: "couldn't be sent" });
+    await expect(notice).toContainText("Your scheduled message in #random couldn't be sent: The channel was archived.");
+    await notice.getByTestId('bot-link').click();
     const item = page.getByTestId('scheduled-item');
     await expect(item).toContainText('Not sent: The channel was archived.');
     await expect(item.getByRole('button', { name: 'Retry' })).toBeVisible();
@@ -138,7 +140,7 @@ test.describe('reminders', () => {
     emu.seed({ demo: true });
   });
 
-  test('/remind sets a reminder; it lands in Activity; snooze and done @cross', async ({ page }) => {
+  test('/remind sets a reminder; it arrives from Flackbot; snooze @cross', async ({ page }) => {
     await signIn(page, users.member, '/c/cGeneral');
     const box = composer(page).locator('textarea');
 
@@ -160,20 +162,22 @@ test.describe('reminders', () => {
     emu.runScheduled({ backdate: true });
     await expect(page.getByText('No reminders')).toBeVisible();
 
-    await page.getByRole('link', { name: 'Activity' }).first().click();
-    const reminder = page.getByTestId('reminder-item').filter({ hasText: 'call Ana' });
-    await expect(reminder).toContainText('Reminder');
+    // It arrives from Flackbot, in its DM.
+    await page.getByTestId('dm-list').getByRole('link', { name: /Flackbot/ }).click();
+    await expect(page).toHaveURL(/\/c\/dm_flackbot_uMember$/);
+    const reminder = channelMsgs(page).filter({ hasText: '⏰ Reminder: call Ana' });
+    await expect(reminder).toBeVisible();
     await reminder.getByRole('button', { name: 'Snooze' }).click();
     await page.getByRole('menuitem', { name: /^In 1 hour/ }).click();
-    await expect(reminder).toHaveCount(0);
+    await expect(reminder.getByRole('status')).toContainText('Snoozed until');
 
     await page.getByRole('link', { name: 'Later' }).click();
     await page.getByRole('tab', { name: /Reminders/ }).click();
     await expect(page.getByTestId('reminders-list')).toContainText('call Ana');
     emu.runScheduled({ backdate: true });
-    await page.getByRole('link', { name: 'Activity' }).first().click();
-    await page.getByTestId('reminder-item').getByRole('button', { name: 'Done' }).click();
-    await expect(page.getByTestId('reminder-item')).toHaveCount(0);
+    await expect(page.getByText('No reminders')).toBeVisible();
+    await page.goto('/c/dm_flackbot_uMember');
+    await expect(channelMsgs(page).filter({ hasText: '⏰ Reminder: call Ana' })).toHaveCount(2);
   });
 
   test('remind me about a message from its ⋯ menu', async ({ page }) => {
@@ -192,10 +196,10 @@ test.describe('reminders', () => {
     await expect(item).toContainText('Mia Member: Plan for today');
 
     emu.runScheduled({ backdate: true });
-    await page.getByRole('link', { name: 'Activity' }).first().click();
-    const reminder = page.getByTestId('reminder-item');
-    await expect(reminder).toContainText('Reminder about a message in #engineering');
-    await reminder.getByRole('link').click();
+    await page.goto('/c/dm_flackbot_uMember2');
+    const reminder = channelMsgs(page).filter({ hasText: '⏰ Reminder:' });
+    await expect(reminder).toContainText('Plan for today');
+    await reminder.getByTestId('bot-link').click();
     await expect(page).toHaveURL(/\/c\/cEngineering\?m=eng0/);
   });
 });

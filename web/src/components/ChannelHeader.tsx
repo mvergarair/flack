@@ -10,6 +10,7 @@ import type { Channel } from '../data/types';
 import { Avatar } from './Avatar';
 import { ChannelSettings } from './ChannelSettings';
 import { BackIcon, BellIcon, BellOffIcon, HashIcon, LockIcon, UsersIcon } from './icons';
+import { BOT_ID } from '../lib/bot';
 import styles from './ChannelHeader.module.css';
 
 export function ChannelHeader({ channel }: { channel: Channel }) {
@@ -73,10 +74,12 @@ export function ChannelHeader({ channel }: { channel: Channel }) {
       >
         {level === 'none' ? <BellOffIcon size={16} /> : <BellIcon size={16} />}
       </button>
-      <button className={styles.members} onClick={() => setSettings('about')} aria-label={`${channel.memberIds.length} members`}>
-        <UsersIcon size={16} />
-        {channel.memberIds.length}
-      </button>
+      {!channel.memberIds.includes(BOT_ID) && (
+        <button className={styles.members} onClick={() => setSettings('about')} aria-label={`${channel.memberIds.length} members`}>
+          <UsersIcon size={16} />
+          {channel.memberIds.length}
+        </button>
+      )}
       {settings && <ChannelSettings channel={channel} initialTab={settings} onClose={() => setSettings(false)} />}
     </header>
   );

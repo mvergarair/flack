@@ -51,6 +51,8 @@ export interface MessageDoc {
   replyCount: number;
   replyUserIds: string[];
   deleted?: boolean;
+  /** Flackbot messages: what the app links to (the message a reminder is about, etc.). */
+  botRef?: { kind: 'reminder' | 'schedule-failed' | 'welcome'; text?: string; channelId?: string; messageId?: string; threadParentId?: string | null };
   /** Emulator seed data only. */
   seeded?: boolean;
 }
@@ -66,7 +68,7 @@ export interface ChannelDoc {
 /**
  * users/{uid}/scheduled/{id}: a scheduled message or a reminder. The 10-minute sweep sends
  * due items: messages are posted (with id = this doc's id) and the doc is deleted; reminders
- * become an Activity item + push. Items that can't be sent stay here as status 'failed'.
+ * become a message in the person's Flackbot DM (bot/bot.ts). Items that can't be sent stay here as status 'failed'.
  */
 export interface ScheduledDoc {
   kind: 'message' | 'reminder';
