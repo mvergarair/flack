@@ -7,6 +7,16 @@ a major version means you need to do something when updating, and the notes say 
 Shell: `cd flack && npm run update`). Your settings are kept. Admins also see an "update
 available" note on the People & invites page when a new release is out.
 
+## 1.7.2 (2026-09-30)
+
+- **Fixed runaway reads and writes from the Ask Flackbot pane.** While it was open it marked the
+  Flackbot DM as read over and over (several times a second), which could use a large share of
+  the free daily database quota. Update and reload any open Flack tabs.
+- **`scripts/read-audit.sh`** shows where Firestore reads come from: it turns on Firestore audit
+  logs with SQL access through BigQuery, and reports requests by person, operation and collection.
+- CI: pull requests that only change docs or the website can be merged again (the required
+  end-to-end checks now report instead of being skipped).
+
 ## 1.7.1 (2026-09-29)
 
 - **Ask Flackbot setup: Vertex AI quota.** New Google Cloud projects start with no quota for

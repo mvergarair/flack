@@ -9,6 +9,7 @@ import type { Channel, Message, UserProfile } from '../data/types';
 import { botDmId } from '../lib/bot';
 import { friendlyError } from '../lib/errors';
 import { renderMarkdown } from '../lib/markdown';
+import { isUnread } from '../lib/unread';
 import { BackIcon, CloseIcon, Logo, NewChatIcon, SendIcon } from './icons';
 import styles from './FlackbotPanel.module.css';
 
@@ -43,7 +44,7 @@ interface Props {
  */
 export function FlackbotPanel({ variant, onClose }: Props) {
   const me = useMe();
-  const { users, channelsById } = useWorkspace();
+  const { users, channelsById, reads } = useWorkspace();
   const settings = useAiSettings();
   const conversationId = useConversationId();
   const dmId = botDmId(me.id);
@@ -63,10 +64,15 @@ export function FlackbotPanel({ variant, onClose }: Props) {
   useEffect(() => {
     bottom.current?.scrollIntoView({ block: 'end' });
   }, [messages?.length, liveDraft?.text, liveDraft?.status]);
-  // Reading answers here counts as reading the Flackbot DM.
+  // Reading answers here counts as reading the Flackbot DM, but only when it's actually unread:
+  // marking it read changes the workspace data, so an unguarded effect would loop.
+  const dm = channelsById.get(dmId);
+  const dmUnread = !!dm && isUnread(dm, reads, me.id);
   useEffect(() => {
-    if (messages?.length && channelsById.has(dmId)) markRead(me.id, dmId).catch(() => undefined);
-  }, [messages?.length, channelsById, dmId, me.id]);
+    if (!dmUnread) return;
+    const t = setTimeout(() => markRead(me.id, dmId).catch(() => undefined), 600);
+    return () => clearTimeout(t);
+  }, [dmUnread, dmId, me.id, dm?.lastMessageAt]);
   useEffect(() => {
     input.current?.focus();
   }, [conversationId]);
